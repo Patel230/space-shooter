@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=4 uid="uid://c4wpq5l2d8hu9"]
+
+[ext_resource type="Script" path="res://scripts/enemy.gd" id="1"]
+[ext_resource type="Texture2D" path="res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyRed1.png" id="2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(44, 30)
+
+[node name="Enemy" type="Area2D"]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2")
+scale = Vector2(1.5, 1.5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_1")
+
+[node name="ShootTimer" type="Timer" parent="."]
+one_shot = true
+wait_time = 3.0
