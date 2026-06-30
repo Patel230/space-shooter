@@ -73,29 +73,39 @@ func _start_animations() -> void:
 
 func appear() -> void:
 	show()
-	_play.grab_focus()
 	_apply_font_scale()
-	_start_animations()
-	# Staggered entrance: panel + each element slides up + fades in
+	# Kill any existing tweens first
+	if _glow_tween: _glow_tween.kill()
+	if _float_tween: _float_tween.kill()
+	# Staggered entrance: panel slides in, then children fade in one by one
 	_panel.pivot_offset = _panel.size * 0.5
 	_panel.modulate.a = 0.0
 	_panel.scale = Vector2(0.9, 0.9)
-	# Start all children invisible
 	var children := [_title, _sub, _high, _play, _vol_row, _hint]
+	var orig_y: Array = []
 	for c in children:
+		orig_y.append(c.position.y)
 		c.modulate.a = 0.0
 		c.position.y += 12
 
 	var t := create_tween()
-	# Panel slides in first
 	t.tween_property(_panel, "modulate:a", 1.0, 0.3).set_ease(Tween.EASE_OUT)
 	t.parallel().tween_property(_panel, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	# Then children stagger in
 	for i in children.size():
-		t.tween_callback(func(): pass)
 		t.tween_interval(0.06)
 		t.parallel().tween_property(children[i], "modulate:a", 1.0, 0.25)
-		t.parallel().tween_property(children[i], "position:y", children[i].position.y - 12, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		t.parallel().tween_property(children[i], "position:y", orig_y[i], 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	# Start idle animations AFTER entrance completes
+	t.chain().tween_callback(_start_animations)
+	# Focus play button after panel is visible
+	t.chain().tween_callback(func():
+		_play.grab_focus()
+		# Safety: ensure everything is visible
+		_panel.modulate.a = 1.0
+		_panel.scale = Vector2.ONE
+		for c in children:
+			c.modulate.a = 1.0
+	)
 
 
 func disappear() -> void:

@@ -53,30 +53,51 @@ func appear() -> void:
 	var is_record: bool = Game.score >= Game.high_score and Game.score > 0
 	_high.text = "High Score: %d" % Game.high_score
 	_record.visible = is_record
-	if is_record:
-		_start_record_pulse()
-	else:
-		if _record_tween: _record_tween.kill()
+	if _record_tween: _record_tween.kill()
 	show()
 	# Staggered entrance
 	_panel.pivot_offset = _panel.size * 0.5
 	_panel.modulate.a = 0.0
 	_panel.scale = Vector2(0.9, 0.9)
-	var children := [_title, _score, _high, _record, _restart, _menu]
+	var children := [_title, _score, _high]
+	var orig_y: Array = []
 	for c in children:
+		orig_y.append(c.position.y)
 		c.modulate.a = 0.0
 		c.position.y += 10
+	if is_record:
+		orig_y.append(_record.position.y)
+		_record.modulate.a = 0.0
+		_record.position.y += 10
+		children.append(_record)
+	# Buttons always visible
+	_restart.modulate.a = 0.0
+	_menu.modulate.a = 0.0
+	orig_y.append(_restart.position.y)
+	orig_y.append(_menu.position.y)
+	_restart.position.y += 10
+	_menu.position.y += 10
+	children.append(_restart)
+	children.append(_menu)
 
 	var t := create_tween()
 	t.tween_property(_panel, "modulate:a", 1.0, 0.3).set_ease(Tween.EASE_OUT)
 	t.parallel().tween_property(_panel, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	for i in children.size():
-		if children[i] == _record and not is_record:
-			continue
 		t.tween_interval(0.07)
 		t.parallel().tween_property(children[i], "modulate:a", 1.0, 0.25)
-		t.parallel().tween_property(children[i], "position:y", children[i].position.y - 10, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	_restart.grab_focus()
+		t.parallel().tween_property(children[i], "position:y", orig_y[i], 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	# Record pulse + focus after entrance
+	t.chain().tween_callback(func():
+		if is_record:
+			_start_record_pulse()
+		_restart.grab_focus()
+		# Safety: ensure everything visible
+		_panel.modulate.a = 1.0
+		_panel.scale = Vector2.ONE
+		for c in children:
+			c.modulate.a = 1.0
+	)
 
 
 func disappear() -> void:
