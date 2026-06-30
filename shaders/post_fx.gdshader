@@ -55,7 +55,7 @@ void fragment() {
 
 	// Film grain - per-pixel animated noise
 	if (grain_strength > 0.0001) {
-		float n = hash21(uv * vec2(1920.0, 1080.0) + vec2(time_seed));
+		float n = hash21(uv * (1.0 / SCREEN_PIXEL_SIZE) + vec2(time_seed));
 		col += (n - 0.5) * grain_strength;
 	}
 

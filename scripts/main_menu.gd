@@ -27,17 +27,17 @@ signal start_requested
 @onready var _fx_button: Button = $Center/Panel/Outer/Footer/FxRow/FxButton
 @onready var _hint: Label = $Center/Panel/Outer/Footer/HintLabel
 const _PostFX := preload("res://scripts/post_fx.gd")
+const _SFX_CLICK := preload("res://art/kenney_ui-pack/Sounds/click-a.ogg")
+const _SFX_HOVER := preload("res://art/kenney_ui-pack/Sounds/switch-a.ogg")
 @onready var _body: BoxContainer = $Center/Panel/Outer/Body
 @onready var _left_col: VBoxContainer = $Center/Panel/Outer/Body/LeftCol
 @onready var _right_col: VBoxContainer = $Center/Panel/Outer/Body/RightCol
-@onready var _ship_frame_ctrl: Panel = $Center/Panel/Outer/Body/LeftCol/ShipRow/ShipFrame
 @onready var _ship_row: HBoxContainer = $Center/Panel/Outer/Body/LeftCol/ShipRow
 
 # Aspect ratio below which the body collapses into a single column.
 const NARROW_ASPECT := 1.05
 
 var _glow_tween: Tween
-var _float_tween: Tween
 var _hover_tween: Tween
 var _pulse_tween: Tween
 var _ship_idx: int = 0
@@ -52,18 +52,24 @@ const SHIP_COOLDOWN_SLOW := 0.32
 func _ready() -> void:
 	_apply_layout()
 	get_viewport().size_changed.connect(_apply_layout)
-	_play.pressed.connect(func(): start_requested.emit())
+	_play.pressed.connect(func():
+		_play_ui_sfx(_SFX_CLICK)
+		start_requested.emit()
+	)
 	_play.mouse_entered.connect(_on_play_hover)
 	_play.mouse_exited.connect(_on_play_unhover)
-	_left_btn.pressed.connect(_prev_ship)
-	_right_btn.pressed.connect(_next_ship)
+	_left_btn.pressed.connect(func(): _play_ui_sfx(_SFX_CLICK); _prev_ship())
+	_right_btn.pressed.connect(func(): _play_ui_sfx(_SFX_CLICK); _next_ship())
+	_left_btn.mouse_entered.connect(_hover_sfx)
+	_right_btn.mouse_entered.connect(_hover_sfx)
 	SignalBus.high_score_changed.connect(func(h): _high.text = "HIGH SCORE  %d" % h)
 	_high.text = "HIGH SCORE  %d" % Game.high_score
 	_vol_slider.value = Game.volume * 100.0
 	_vol_pct.text = "%d%%" % int(Game.volume * 100.0)
 	_vol_slider.value_changed.connect(_on_volume_changed)
 	_fx_button.text = _PostFX.preset_name(Game.fx_preset)
-	_fx_button.pressed.connect(_cycle_fx_preset)
+	_fx_button.pressed.connect(func(): _play_ui_sfx(_SFX_CLICK); _cycle_fx_preset())
+	_fx_button.mouse_entered.connect(_hover_sfx)
 	_ship_idx = Cfg.SHIP_ORDER.find(Game.selected_ship)
 	if _ship_idx < 0: _ship_idx = 1
 	_update_ship_display()
@@ -85,7 +91,7 @@ func _apply_orientation() -> void:
 	# Tighter ship frame on narrow screens so it doesn't dominate the column.
 	var s := Responsive.ui_scale()
 	var frame_size := 150.0 if narrow else 190.0
-	_ship_frame_ctrl.custom_minimum_size = Vector2(frame_size, frame_size) * s
+	_ship_frame.custom_minimum_size = Vector2(frame_size, frame_size) * s
 	_ship_row.custom_minimum_size.y = (170.0 if narrow else 200.0) * s
 	# On portrait, give arrows a square hit box; on landscape keep them tall.
 	var arrow_h := 80.0 if narrow else 110.0
@@ -122,6 +128,7 @@ func _cycle_fx_preset() -> void:
 
 
 func _on_play_hover() -> void:
+	_hover_sfx()
 	if _hover_tween: _hover_tween.kill()
 	_hover_tween = create_tween()
 	_hover_tween.tween_property(_play, "scale", Vector2(1.04, 1.04), 0.12).set_ease(Tween.EASE_OUT)
@@ -130,6 +137,21 @@ func _on_play_unhover() -> void:
 	if _hover_tween: _hover_tween.kill()
 	_hover_tween = create_tween()
 	_hover_tween.tween_property(_play, "scale", Vector2.ONE, 0.12).set_ease(Tween.EASE_OUT)
+
+
+func _hover_sfx() -> void:
+	_play_ui_sfx(_SFX_HOVER)
+
+
+func _play_ui_sfx(stream: AudioStream) -> void:
+	if Game.mute:
+		return
+	var p := AudioStreamPlayer.new()
+	p.stream = stream
+	p.volume_db = linear_to_db(maxf(0.0001, Game.volume))
+	p.finished.connect(p.queue_free)
+	add_child(p)
+	p.play()
 
 
 func _prev_ship() -> void:
@@ -144,7 +166,7 @@ func _next_ship() -> void:
 func _update_ship_display(animate: bool = false) -> void:
 	var ship_type: int = Cfg.SHIP_ORDER[_ship_idx]
 	var def: Dictionary = Cfg.SHIP_DEFS[ship_type]
-	Game.selected_ship = ship_type
+	Game.set_selected_ship(ship_type)
 	_ship_preview.texture = def.texture
 	_ship_name.text = def.name
 	_ship_name.modulate = def.color
@@ -191,7 +213,6 @@ func appear() -> void:
 	_apply_layout()
 	_update_ship_display()
 	if _glow_tween: _glow_tween.kill()
-	if _float_tween: _float_tween.kill()
 	if _pulse_tween: _pulse_tween.kill()
 	_panel.pivot_offset = _panel.size * 0.5
 	_panel.modulate.a = 0.0
@@ -210,7 +231,6 @@ func appear() -> void:
 
 func disappear() -> void:
 	if _glow_tween: _glow_tween.kill()
-	if _float_tween: _float_tween.kill()
 	if _pulse_tween: _pulse_tween.kill()
 	var t := create_tween()
 	t.tween_property(_panel, "modulate:a", 0.0, 0.2)

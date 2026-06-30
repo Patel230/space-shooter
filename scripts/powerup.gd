@@ -5,8 +5,22 @@ class_name Powerup extends Area2D
 @onready var _glow_particles: GPUParticles2D = $GlowParticles
 var power_type: int = 0
 var _pending_tex: Texture2D = null
-var _base_y: float = 0.0
 var _time: float = 0.0
+
+static var _grad_cache: Dictionary = {}
+
+static func _shared_gradient(c0: Color, c05: Color, c1: Color) -> GradientTexture1D:
+	var key := "%s|%s|%s" % [c0.to_html(), c05.to_html(), c1.to_html()]
+	if _grad_cache.has(key):
+		return _grad_cache[key]
+	var g := Gradient.new()
+	g.set_color(0, c0)
+	g.add_point(0.5, c05)
+	g.set_color(1, c1)
+	var gt := GradientTexture1D.new()
+	gt.gradient = g
+	_grad_cache[key] = gt
+	return gt
 
 
 func setup(type: int, tex: Texture2D) -> void:
@@ -19,7 +33,6 @@ func _ready() -> void:
 	area_entered.connect(_on_area_entered)
 	if _pending_tex:
 		_sprite.texture = _pending_tex
-	_base_y = position.y
 	_setup_particles()
 	_setup_animations()
 
@@ -34,13 +47,11 @@ func _setup_particles() -> void:
 	mat.gravity = Vector3.ZERO
 	mat.scale_min = 0.8
 	mat.scale_max = 1.6
-	var gradient := Gradient.new()
-	gradient.set_color(0, Color(color.r, color.g, color.b, 0.8))
-	gradient.add_point(0.5, Color(color.r * 1.2, color.g * 1.2, color.b * 1.2, 0.5))
-	gradient.set_color(1, Color(color.r * 1.4, color.g * 1.4, color.b * 1.4, 0.0))
-	var grad_tex := GradientTexture1D.new()
-	grad_tex.gradient = gradient
-	mat.color_ramp = grad_tex
+	mat.color_ramp = _shared_gradient(
+		Color(color.r, color.g, color.b, 0.8),
+		Color(color.r * 1.2, color.g * 1.2, color.b * 1.2, 0.5),
+		Color(color.r * 1.4, color.g * 1.4, color.b * 1.4, 0.0)
+	)
 	_glow_particles.process_material = mat
 	_glow_particles.amount = 20
 	_glow_particles.lifetime = 0.6
@@ -104,17 +115,23 @@ func _spawn_collect_burst() -> void:
 	mat.gravity = Vector3.ZERO
 	mat.scale_min = 1.0
 	mat.scale_max = 2.2
-	var gradient := Gradient.new()
-	gradient.set_color(0, Color(color.r * 1.3, color.g * 1.3, color.b * 1.3, 1.0))
-	gradient.add_point(0.5, color)
-	gradient.set_color(1, Color(color.r, color.g, color.b, 0.0))
-	var grad_tex := GradientTexture1D.new()
-	grad_tex.gradient = gradient
-	mat.color_ramp = grad_tex
+	mat.color_ramp = _shared_gradient(
+		Color(color.r * 1.3, color.g * 1.3, color.b * 1.3, 1.0),
+		color,
+		Color(color.r, color.g, color.b, 0.0)
+	)
 	burst.process_material = mat
-	get_tree().root.add_child(burst)
+	_add_to_fx_container(burst)
 	burst.emitting = true
 	burst.finished.connect(burst.queue_free)
+
+
+func _add_to_fx_container(node: Node) -> void:
+	var fx := get_tree().get_first_node_in_group("fx_container")
+	if fx:
+		fx.add_child(node)
+	else:
+		get_tree().root.add_child(node)
 
 
 func _on_area_entered(area: Area2D) -> void:

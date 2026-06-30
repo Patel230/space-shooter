@@ -41,6 +41,7 @@ var _mat: ShaderMaterial
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 100
 	_mat = ShaderMaterial.new()
 	_mat.shader = SHADER

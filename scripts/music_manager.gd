@@ -48,9 +48,13 @@ var _prev_beat: int = -1
 var _intensity: float = 0.3
 var _target_intensity: float = 0.3
 var _running: bool = false
+# Snapshot of BPM locked in at the start of the current bar so bar length
+# stays constant within the bar (avoid jitter from frame-by-frame lerp).
+var _bpm_active: float = 84.0
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_player = AudioStreamPlayer.new()
 	_player.bus = "Master"
 	add_child(_player)
@@ -72,7 +76,7 @@ func _ready() -> void:
 func _on_state_changed(state: int) -> void:
 	match state:
 		Game.State.MENU: _target_intensity = 0.25
-		Game.State.PLAYING: _target_intensity = 0.95
+		Game.State.PLAYING, Game.State.PAUSED: _target_intensity = 0.95
 		Game.State.GAME_OVER: _target_intensity = 0.15
 
 
@@ -85,6 +89,20 @@ func _on_mute_changed(muted: bool) -> void:
 	if muted:
 		_player.stop()
 	else:
+		# Reset all accumulators so playback starts from a clean waveform
+		# zero-crossing, avoiding the pop/click from phase discontinuity.
+		_p_bass = 0.0
+		_p_pad = 0.0
+		_p_arp = 0.0
+		_p_lead = 0.0
+		_p_hiss = 0.0
+		_p_kick = 0.0
+		_sample_count = 0
+		_bar_start_sample = 0
+		_chord_index = 0
+		_arp_step = 0
+		_kick_env = 0.0
+		_prev_beat = -1
 		_player.play()
 		_playback = _player.get_stream_playback()
 
@@ -98,8 +116,7 @@ func _process(delta: float) -> void:
 
 
 func _bar_samples() -> int:
-	# 4 beats per bar, 60/BPM seconds per beat, 4 beats/bar
-	return int(60.0 / _bpm * 4.0 * SR)
+	return int(60.0 / _bpm_active * 4.0 * SR)
 
 
 func _fill_buffer() -> void:
@@ -108,11 +125,13 @@ func _fill_buffer() -> void:
 		return
 	var buf := PackedVector2Array()
 	buf.resize(frames_available)
-	var bar_len: int = _bar_samples()
 	for i in frames_available:
-		# Advance bar/chord/arp timing
 		var local := _sample_count - _bar_start_sample
+		var bar_len: int = _bar_samples()
 		if local >= bar_len:
+			# Snap the BPM at the bar boundary for stable bar length within this bar.
+			_bpm_active = _bpm
+			bar_len = _bar_samples()
 			_bar_start_sample = _sample_count
 			local = 0
 			_chord_index = (_chord_index + 1) % CHORD_HZ.size()

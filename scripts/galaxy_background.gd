@@ -3,7 +3,7 @@ class_name GalaxyBackground extends ColorRect
 ## Features: rotating spiral arms, pulsing nebula clouds, shooting stars,
 ## dust lanes, twinkling star fields, and smooth galaxy transitions per wave.
 
-const GALAXIES: Array = [
+const GALAXIES: Array[Dictionary] = [
 	{"name": "Aurora Nebula", "bg": Color(0.01, 0.02, 0.05), "nebula": [Color(0.05, 0.3, 0.4), Color(0.1, 0.5, 0.6), Color(0.0, 0.2, 0.35)], "star": Color(0.6, 0.95, 1.0), "core": Color(0.15, 0.6, 0.8), "dust": Color(0.02, 0.1, 0.15)},
 	{"name": "Crimson Vortex", "bg": Color(0.05, 0.01, 0.02), "nebula": [Color(0.4, 0.08, 0.05), Color(0.6, 0.15, 0.08), Color(0.25, 0.05, 0.03)], "star": Color(1.0, 0.7, 0.6), "core": Color(0.8, 0.2, 0.15), "dust": Color(0.15, 0.03, 0.02)},
 	{"name": "Golden Spiral", "bg": Color(0.04, 0.03, 0.01), "nebula": [Color(0.35, 0.25, 0.05), Color(0.5, 0.35, 0.1), Color(0.2, 0.15, 0.03)], "star": Color(1.0, 0.9, 0.6), "core": Color(0.7, 0.5, 0.15), "dust": Color(0.12, 0.08, 0.02)},
@@ -18,15 +18,15 @@ const GALAXIES: Array = [
 
 var _galaxy_idx: int = 0
 var _time: float = 0.0
-var _nebula_seeds: Array = []
-var _star_seeds: Array = []
-var _spiral_stars: Array = []
-var _shooting_stars: Array = []
-var _dust_seeds: Array = []
-var _prev_nebula_seeds: Array = []
-var _prev_star_seeds: Array = []
-var _prev_spiral_stars: Array = []
-var _prev_dust_seeds: Array = []
+var _nebula_seeds: Array[Dictionary] = []
+var _star_seeds: Array[Dictionary] = []
+var _spiral_stars: Array[Dictionary] = []
+var _shooting_stars: Array[Dictionary] = []
+var _dust_seeds: Array[Dictionary] = []
+var _prev_nebula_seeds: Array[Dictionary] = []
+var _prev_star_seeds: Array[Dictionary] = []
+var _prev_spiral_stars: Array[Dictionary] = []
+var _prev_dust_seeds: Array[Dictionary] = []
 var _blend: float = 1.0
 var _prev_galaxy_idx: int = 0
 var _grad_tex: GradientTexture2D

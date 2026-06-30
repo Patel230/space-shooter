@@ -5,6 +5,7 @@ class_name WaveManager extends Node
 signal wave_cleared
 signal enemy_spawned(enemy: Enemy)
 signal enemy_fired(pos: Vector2, dir: Vector2)
+signal enemy_escaped
 
 @onready var _timer: Timer = $SpawnTimer
 @onready var _pause_timer: Timer = $PauseTimer
@@ -40,8 +41,10 @@ func register_enemy() -> void:
 	_alive += 1
 
 
-func unregister_enemy() -> void:
+func unregister_enemy(was_escape: bool = false) -> void:
 	_alive -= 1
+	if was_escape:
+		enemy_escaped.emit()
 	_check_wave_cleared()
 
 
@@ -79,8 +82,9 @@ func _spawn_enemy() -> void:
 	var speed := Cfg.ENEMY_SPEED_BASE + _wave * Cfg.ENEMY_SPEED_PER_WAVE + randf_range(-20.0, 30.0)
 	var interval := maxf(1.2, Cfg.ENEMY_SHOOT_INTERVAL - _wave * 0.15)
 	e.setup(speed, hp, interval, _player)
+	e.set_behavior(_roll_behavior())
 	e.died.connect(_on_enemy_died)
-	e.escaped.connect(unregister_enemy)
+	e.escaped.connect(func(): unregister_enemy(true))
 	e.fired.connect(_on_enemy_fired)
 	register_enemy()
 	enemy_spawned.emit(e)
@@ -96,11 +100,28 @@ func _on_enemy_fired(pos: Vector2, dir: Vector2) -> void:
 
 
 func _roll_hp() -> int:
-	if _wave >= 6 and randf() < 0.15:
+	if _wave >= 6 and randf() < Cfg.ENEMY_HP_ROLL_HEAVY:
 		return 3
-	if _wave >= 3 and randf() < 0.35:
+	if _wave >= 3 and randf() < Cfg.ENEMY_HP_ROLL_MEDIUM:
 		return 2
 	return 1
+
+
+func _roll_behavior() -> int:
+	# Waves 1-2: only drifters (simple intro).
+	if _wave <= 2:
+		return Enemy.Behavior.DRIFTER
+	# Waves 3-4: introduce divers.
+	var r := randf()
+	if _wave <= 4:
+		return Enemy.Behavior.DRIFTER if r < 0.6 else Enemy.Behavior.DIVER
+	# Waves 5+: add weavers, increase diver/weaver ratio.
+	if r < 0.35:
+		return Enemy.Behavior.DRIFTER
+	elif r < 0.65:
+		return Enemy.Behavior.DIVER
+	else:
+		return Enemy.Behavior.WEAVER
 
 
 func _check_wave_cleared() -> void:

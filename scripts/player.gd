@@ -27,9 +27,11 @@ var _ship_triple_default: bool = false
 var _touch_id: int = -1
 var _rapid_timer: Timer
 var _triple_timer: Timer
+var _shield_timer: Timer
 var _invuln_tween: Tween
-var _ship_speed: float = Cfg.PLAYER_SPEED
-var _base_cooldown: float = Cfg.SHOOT_COOLDOWN
+var _ship_speed: float = 460.0
+var _base_cooldown: float = 0.22
+var _shield_active: bool = false
 
 
 func _ready() -> void:
@@ -39,6 +41,7 @@ func _ready() -> void:
 	area_entered.connect(_on_area_entered)
 	_rapid_timer = _make_one_shot_timer(_on_rapid_end)
 	_triple_timer = _make_one_shot_timer(_on_triple_end)
+	_shield_timer = _make_one_shot_timer(_on_shield_end)
 	_setup_trail()
 	SignalBus.volume_changed.connect(_on_volume_changed)
 	_on_volume_changed(Game.volume)
@@ -60,9 +63,11 @@ func reset() -> void:
 	_triple = _ship_triple_default
 	_can_shoot = true
 	_rapid = false
+	_shield_active = false
 	_touch_id = -1
 	_rapid_timer.stop()
 	_triple_timer.stop()
+	_shield_timer.stop()
 	_cooldown.stop()
 	_invuln.stop()
 	if _invuln_tween:
@@ -162,6 +167,13 @@ func take_hit() -> void:
 		return
 	if not _invuln.is_stopped():
 		return
+	# Shield absorbs one hit completely.
+	if _shield_active:
+		_shield_active = false
+		_shield_timer.stop()
+		_sprite.modulate = Color.WHITE
+		SignalBus.shake_requested.emit(Cfg.SHAKE_HIT_AMOUNT * 0.5, Cfg.SHAKE_HIT_DURATION * 0.5)
+		return
 	Game.lose_life()
 	SignalBus.player_hit.emit()
 	SignalBus.shake_requested.emit(Cfg.SHAKE_HIT_AMOUNT, Cfg.SHAKE_HIT_DURATION)
@@ -188,7 +200,10 @@ func apply_powerup(type: int) -> void:
 			_triple = true
 			_triple_timer.start(Cfg.POWERUP_DURATION)
 		PowerType.SHIELD:
-			Game.gain_life()
+			_shield_active = true
+			_shield_timer.start(Cfg.SHIELD_DURATION)
+			# Visual indicator: blue-tinted sprite
+			_sprite.modulate = Color(0.5, 0.8, 1.0, 1.0)
 
 
 # --- Internals ---
@@ -210,19 +225,28 @@ func _setup_trail() -> void:
 	mat.gravity = Vector3.ZERO
 	mat.scale_min = 0.6
 	mat.scale_max = 1.3
-	var gradient := Gradient.new()
-	gradient.set_color(0, Palette.PLAYER_TRAIL)
-	gradient.add_point(0.5, Color(1.0, 0.9, 0.5, 0.6))
-	gradient.set_color(1, Color(1.0, 1.0, 0.7, 0.0))
-	var grad_tex := GradientTexture1D.new()
-	grad_tex.gradient = gradient
-	mat.color_ramp = grad_tex
+	mat.color_ramp = _gradient_tex(Palette.PLAYER_TRAIL, Color(1.0, 0.9, 0.5, 0.6), Color(1.0, 1.0, 0.7, 0.0))
 	var trail: GPUParticles2D = $Trail
 	trail.process_material = mat
 	trail.amount = 28
 	trail.lifetime = 0.45
 	trail.local_coords = false
 	trail.emitting = true
+
+
+static var _player_grad_cache: Dictionary = {}
+static func _gradient_tex(c0: Color, c05: Color, c1: Color) -> GradientTexture1D:
+	var key := "%s|%s|%s" % [c0.to_html(), c05.to_html(), c1.to_html()]
+	if _player_grad_cache.has(key):
+		return _player_grad_cache[key]
+	var g := Gradient.new()
+	g.set_color(0, c0)
+	g.add_point(0.5, c05)
+	g.set_color(1, c1)
+	var gt := GradientTexture1D.new()
+	gt.gradient = g
+	_player_grad_cache[key] = gt
+	return gt
 
 
 func _muzzle_flash() -> void:
@@ -239,7 +263,12 @@ func _on_invuln_end() -> void:
 	if _invuln_tween:
 		_invuln_tween.kill()
 		_invuln_tween = null
-	_sprite.modulate.a = 1.0
+	_sprite.modulate = Color.WHITE
+
+
+func _on_shield_end() -> void:
+	_shield_active = false
+	_sprite.modulate = Color.WHITE
 
 
 func _on_rapid_end() -> void:

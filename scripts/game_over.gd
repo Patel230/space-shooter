@@ -2,6 +2,9 @@ class_name GameOverScreen extends CanvasLayer
 ## Compact game-over overlay with staggered entrance, record pulse, button hover.
 ## Fully responsive font scaling.
 
+const _SFX_CLICK := preload("res://art/kenney_ui-pack/Sounds/click-b.ogg")
+const _SFX_HOVER := preload("res://art/kenney_ui-pack/Sounds/switch-b.ogg")
+
 signal restart_requested
 signal menu_requested
 
@@ -20,11 +23,11 @@ var _orig_positions: Dictionary = {}
 
 
 func _ready() -> void:
-	_restart.pressed.connect(func(): restart_requested.emit())
-	_menu.pressed.connect(func(): menu_requested.emit())
-	_restart.mouse_entered.connect(func(): _btn_hover(_restart))
+	_restart.pressed.connect(func(): _play_ui_sfx(_SFX_CLICK); restart_requested.emit())
+	_menu.pressed.connect(func(): _play_ui_sfx(_SFX_CLICK); menu_requested.emit())
+	_restart.mouse_entered.connect(func(): _hover_sfx(); _btn_hover(_restart))
 	_restart.mouse_exited.connect(func(): _btn_unhover(_restart))
-	_menu.mouse_entered.connect(func(): _btn_hover(_menu))
+	_menu.mouse_entered.connect(func(): _hover_sfx(); _btn_hover(_menu))
 	_menu.mouse_exited.connect(func(): _btn_unhover(_menu))
 	# Cache original positions once so entrance animation has a stable target
 	# even if appear() is called twice in a row.
@@ -57,7 +60,7 @@ func _apply_font_scale() -> void:
 func appear() -> void:
 	_apply_font_scale()
 	_score.text = "Score: %d" % Game.score
-	var is_record: bool = Game.score >= Game.high_score and Game.score > 0
+	var is_record: bool = Game.last_run_is_record
 	_high.text = "High Score: %d" % Game.high_score
 	_record.visible = is_record
 	# Cancel any in-flight tweens so a rapid game-over → restart → game-over
@@ -125,3 +128,18 @@ func _start_record_pulse() -> void:
 	_record_tween.chain().tween_property(_record, "modulate", Palette.GAMEOVER_RECORD_GLOW, 0.5)
 	_record_tween.chain().tween_property(_record, "modulate", Palette.GAMEOVER_RECORD, 0.5)
 	_record_tween.set_loops()
+
+
+func _hover_sfx() -> void:
+	_play_ui_sfx(_SFX_HOVER)
+
+
+func _play_ui_sfx(stream: AudioStream) -> void:
+	if Game.mute:
+		return
+	var p := AudioStreamPlayer.new()
+	p.stream = stream
+	p.volume_db = linear_to_db(maxf(0.0001, Game.volume))
+	p.finished.connect(p.queue_free)
+	add_child(p)
+	p.play()

@@ -55,11 +55,11 @@ func _process(delta: float) -> void:
 
 
 func _draw() -> void:
-	var _t := Time.get_ticks_msec() / 1000.0
+	var t := Time.get_ticks_msec() / 1000.0
 	for layer in _layers:
 		var streak: bool = layer.streak
 		for star: Dictionary in layer.stars:
-			var twinkle := 0.7 + sin(_t * star.twinkle_speed + star.twinkle_phase) * 0.3
+			var twinkle := 0.7 + sin(t * star.twinkle_speed + star.twinkle_phase) * 0.3
 			var c: Color = star.color
 			var a: float = star.alpha * twinkle
 			if streak:

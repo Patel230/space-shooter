@@ -18,6 +18,8 @@ const HIT_STOP_DURATION := 0.04
 @onready var _menu: MainMenu = $MainMenu
 @onready var _gameover: GameOverScreen = $GameOverScreen
 
+var _pause_overlay: CanvasLayer
+
 @onready var _sfx_explosion: AudioStreamPlayer = $SFX/Explosion
 @onready var _sfx_hit: AudioStreamPlayer = $SFX/Hit
 @onready var _sfx_powerup: AudioStreamPlayer = $SFX/Powerup
@@ -33,6 +35,14 @@ func _ready() -> void:
 	_hit_stop_timer.process_mode = Node.PROCESS_MODE_ALWAYS
 	_hit_stop_timer.timeout.connect(_on_hit_stop_timeout)
 	add_child(_hit_stop_timer)
+	# Tag the Explosions container so transient particles can find it
+	_explosions.add_to_group("fx_container")
+	# Pause overlay
+	_pause_overlay = preload("res://scripts/pause_overlay.gd").new()
+	add_child(_pause_overlay)
+	_pause_overlay.resume_requested.connect(_resume_game)
+	_pause_overlay.restart_requested.connect(_on_pause_restart)
+	_pause_overlay.menu_requested.connect(_on_pause_menu)
 	_connect_signals()
 	_apply_sfx_volume(Game.volume)
 	_show_menu()
@@ -53,6 +63,7 @@ func _connect_signals() -> void:
 	_wave_mgr.enemy_spawned.connect(_on_enemy_spawned)
 	_wave_mgr.enemy_fired.connect(_on_enemy_fired)
 	_wave_mgr.wave_cleared.connect(_on_wave_cleared)
+	_wave_mgr.enemy_escaped.connect(_on_enemy_escaped)
 
 
 # --- State transitions ---
@@ -138,6 +149,49 @@ func _on_powerup(_type: int) -> void:
 	_play(_sfx_powerup)
 
 
+# --- Pause ---
+
+func _toggle_pause() -> void:
+	if Game.get_state() == Game.State.PLAYING:
+		_pause()
+	elif Game.get_state() == Game.State.PAUSED:
+		_resume_game()
+
+
+func _pause() -> void:
+	Game.set_state(Game.State.PAUSED)
+	get_tree().paused = true
+	_pause_overlay.appear()
+
+
+func _resume_game() -> void:
+	Game.set_state(Game.State.PLAYING)
+	get_tree().paused = false
+	_pause_overlay.disappear()
+
+
+func _on_pause_restart() -> void:
+	get_tree().paused = false
+	_pause_overlay.disappear()
+	_start_game()
+
+
+func _on_pause_menu() -> void:
+	get_tree().paused = false
+	_pause_overlay.disappear()
+	_show_menu()
+
+
+# --- Escaped enemy penalty ---
+
+func _on_enemy_escaped() -> void:
+	Game.lose_life()
+	Game.add_score(-Cfg.ENEMY_ESCAPE_SCORE_PENALTY)
+	SignalBus.shake_requested.emit(4.0, 0.2)
+	if Game.lives <= 0:
+		SignalBus.player_died.emit()
+
+
 # --- VFX helpers ---
 
 func _spawn_explosion(pos: Vector2, big: bool) -> void:
@@ -185,6 +239,8 @@ func _spawn_powerup(pos: Vector2) -> void:
 
 
 func _shake(amount: float, duration: float) -> void:
+	if not Game.screen_shake:
+		return
 	if _shake_tween:
 		_shake_tween.kill()
 	_shake_tween = create_tween()
@@ -232,8 +288,10 @@ func _input(event: InputEvent) -> void:
 			KEY_M:
 				Game.toggle_mute()
 			KEY_ESCAPE:
-				if Game.get_state() == Game.State.PLAYING:
-					_show_menu()
+				match Game.get_state():
+					Game.State.PLAYING: _pause()
+					Game.State.PAUSED: _resume_game()
+					_: _show_menu()
 			KEY_ENTER, KEY_KP_ENTER:
 				if Game.get_state() in [Game.State.MENU, Game.State.GAME_OVER]:
 					_start_game()
