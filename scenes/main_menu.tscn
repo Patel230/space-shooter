@@ -6,105 +6,107 @@
 [node name="MainMenu" type="CanvasLayer"]
 script = ExtResource("1_s")
 
-[node name="Panel" type="Panel" parent="."]
-theme = ExtResource("2_theme")
-anchor_left = 0.08
-anchor_top = 0.12
-anchor_right = 0.92
-anchor_bottom = 0.88
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBox" type="VBoxContainer" parent="Panel"]
+[node name="Center" type="CenterContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 24.0
-offset_top = 24.0
-offset_right = -24.0
-offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="Center"]
+theme = ExtResource("2_theme")
+custom_minimum_size = Vector2(360, 0)
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 14.0
+offset_top = 14.0
+offset_right = -14.0
+offset_bottom = -14.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 
-[node name="TitleLabel" type="Label" parent="Panel/VBox"]
+[node name="TitleLabel" type="Label" parent="Center/Panel/VBox"]
 clip_text = true
 horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.3, 0.95, 0.85, 1)
-theme_override_colors/font_shadow_color = Color(0.02, 0.22, 0.2, 0.8)
-theme_override_constants/shadow_offset_y = 3
-theme_override_constants/shadow_outline_size = 8
-theme_override_font_sizes/font_size = 46
+theme_override_colors/font_color = Color(0.25, 0.95, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0.02, 0.2, 0.18, 0.9)
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 6
+theme_override_font_sizes/font_size = 34
 text = "SPACE SHOOTER"
 
-[node name="SubLabel" type="Label" parent="Panel/VBox"]
+[node name="SubLabel" type="Label" parent="Center/Panel/VBox"]
 clip_text = true
 horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.95, 0.28, 0.72, 1)
-theme_override_colors/font_shadow_color = Color(0.2, 0.02, 0.15, 0.5)
+theme_override_colors/font_color = Color(0.95, 0.3, 0.65, 1)
+theme_override_colors/font_shadow_color = Color(0.2, 0.02, 0.12, 0.5)
 theme_override_constants/shadow_offset_y = 1
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 14
 text = "Powered by Godot 4.7"
 
-[node name="Spacer" type="Control" parent="Panel/VBox"]
-custom_minimum_size = Vector2(0, 14)
+[node name="Spacer" type="Control" parent="Center/Panel/VBox"]
+custom_minimum_size = Vector2(0, 8)
 
-[node name="HighScoreLabel" type="Label" parent="Panel/VBox"]
+[node name="HighScoreLabel" type="Label" parent="Center/Panel/VBox"]
 clip_text = true
 horizontal_alignment = 1
-theme_override_colors/font_color = Color(1, 0.83, 0.25, 1)
-theme_override_colors/font_shadow_color = Color(0.3, 0.2, 0.02, 0.6)
-theme_override_constants/shadow_offset_y = 2
-theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(1, 0.75, 0.2, 1)
+theme_override_colors/font_shadow_color = Color(0.25, 0.15, 0.02, 0.6)
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 18
 text = "High Score: 0"
 
-[node name="Spacer2" type="Control" parent="Panel/VBox"]
-custom_minimum_size = Vector2(0, 18)
+[node name="Spacer2" type="Control" parent="Center/Panel/VBox"]
+custom_minimum_size = Vector2(0, 10)
 
-[node name="PlayButton" type="Button" parent="Panel/VBox"]
-custom_minimum_size = Vector2(0, 64)
+[node name="PlayButton" type="Button" parent="Center/Panel/VBox"]
+custom_minimum_size = Vector2(0, 44)
 clip_text = true
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 20
 theme_override_colors/font_color = Color(0.98, 0.95, 0.9, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 text = "PLAY"
 
-[node name="Spacer3" type="Control" parent="Panel/VBox"]
-custom_minimum_size = Vector2(0, 10)
+[node name="Spacer3" type="Control" parent="Center/Panel/VBox"]
+custom_minimum_size = Vector2(0, 6)
 
-[node name="VolumeRow" type="HBoxContainer" parent="Panel/VBox"]
-custom_minimum_size = Vector2(0, 40)
+[node name="VolumeRow" type="HBoxContainer" parent="Center/Panel/VBox"]
+custom_minimum_size = Vector2(0, 28)
 
-[node name="VolumeLabel" type="Label" parent="Panel/VBox/VolumeRow"]
+[node name="VolumeLabel" type="Label" parent="Center/Panel/VBox/VolumeRow"]
 clip_text = true
-theme_override_colors/font_color = Color(0.8, 0.78, 0.72, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.7, 0.68, 0.65, 1)
+theme_override_font_sizes/font_size = 12
 text = "VOL"
-custom_minimum_size = Vector2(60, 0)
+custom_minimum_size = Vector2(36, 0)
 
-[node name="VolumeSlider" type="HSlider" parent="Panel/VBox/VolumeRow"]
-custom_minimum_size = Vector2(0, 24)
+[node name="VolumeSlider" type="HSlider" parent="Center/Panel/VBox/VolumeRow"]
+custom_minimum_size = Vector2(0, 20)
 size_flags_horizontal = 3
 min_value = 0.0
 max_value = 100.0
 value = 70.0
 
-[node name="VolumePercent" type="Label" parent="Panel/VBox/VolumeRow"]
+[node name="VolumePercent" type="Label" parent="Center/Panel/VBox/VolumeRow"]
 clip_text = true
 horizontal_alignment = 2
-theme_override_colors/font_color = Color(0.3, 0.95, 0.85, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.25, 0.95, 0.85, 1)
+theme_override_font_sizes/font_size = 12
 text = "70%"
-custom_minimum_size = Vector2(44, 0)
+custom_minimum_size = Vector2(32, 0)
 
-[node name="Spacer4" type="Control" parent="Panel/VBox"]
-custom_minimum_size = Vector2(0, 10)
+[node name="Spacer4" type="Control" parent="Center/Panel/VBox"]
+custom_minimum_size = Vector2(0, 6)
 
-[node name="HintLabel" type="Label" parent="Panel/VBox"]
+[node name="HintLabel" type="Label" parent="Center/Panel/VBox"]
 clip_text = true
 horizontal_alignment = 1
 autowrap_mode = 3
-theme_override_colors/font_color = Color(0.55, 0.52, 0.48, 1)
-theme_override_font_sizes/font_size = 14
-text = "Move: Arrows/WASD/Drag    Shoot: Space    M: Mute    Esc: Menu"
+theme_override_colors/font_color = Color(0.5, 0.48, 0.45, 1)
+theme_override_font_sizes/font_size = 11
+text = "Arrows/WASD/Drag: Move    Space: Shoot    M: Mute"

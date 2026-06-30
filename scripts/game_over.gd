@@ -1,58 +1,100 @@
 class_name GameOverScreen extends CanvasLayer
-## Game-over overlay with dramatic colors, new record indicator, and smooth transitions.
+## Compact game-over overlay with staggered entrance, record pulse, button hover.
+## Fully responsive font scaling.
 
 signal restart_requested
 signal menu_requested
 
-@onready var _score: Label = $Panel/VBox/ScoreLabel
-@onready var _high: Label = $Panel/VBox/HighScoreLabel
-@onready var _restart: Button = $Panel/VBox/RestartButton
-@onready var _menu: Button = $Panel/VBox/TitleButton
-@onready var _panel: Panel = $Panel
-@onready var _record: Label = $Panel/VBox/NewRecord
+@onready var _score: Label = $Center/Panel/VBox/ScoreLabel
+@onready var _high: Label = $Center/Panel/VBox/HighScoreLabel
+@onready var _restart: Button = $Center/Panel/VBox/RestartButton
+@onready var _menu: Button = $Center/Panel/VBox/TitleButton
+@onready var _panel: Panel = $Center/Panel
+@onready var _record: Label = $Center/Panel/VBox/NewRecord
+@onready var _title: Label = $Center/Panel/VBox/TitleLabel
+
 var _record_tween: Tween
+var _hover_tween: Tween
 
 
 func _ready() -> void:
 	_restart.pressed.connect(func(): restart_requested.emit())
 	_menu.pressed.connect(func(): menu_requested.emit())
+	_restart.mouse_entered.connect(func(): _btn_hover(_restart))
+	_restart.mouse_exited.connect(func(): _btn_unhover(_restart))
+	_menu.mouse_entered.connect(func(): _btn_hover(_menu))
+	_menu.mouse_exited.connect(func(): _btn_unhover(_menu))
+
+
+func _btn_hover(b: Button) -> void:
+	if _hover_tween: _hover_tween.kill()
+	_hover_tween = create_tween()
+	_hover_tween.tween_property(b, "scale", Vector2(1.06, 1.06), 0.1).set_ease(Tween.EASE_OUT)
+
+func _btn_unhover(b: Button) -> void:
+	if _hover_tween: _hover_tween.kill()
+	_hover_tween = create_tween()
+	_hover_tween.tween_property(b, "scale", Vector2.ONE, 0.1).set_ease(Tween.EASE_OUT)
+
+
+func _apply_font_scale() -> void:
+	var s := Responsive.ui_scale()
+	_title.add_theme_font_size_override("font_size", maxi(20, int(32 * s)))
+	_score.add_theme_font_size_override("font_size", maxi(14, int(22 * s)))
+	_high.add_theme_font_size_override("font_size", maxi(12, int(18 * s)))
+	_record.add_theme_font_size_override("font_size", maxi(11, int(16 * s)))
+	_restart.add_theme_font_size_override("font_size", maxi(13, int(18 * s)))
+	_menu.add_theme_font_size_override("font_size", maxi(13, int(18 * s)))
 
 
 func appear() -> void:
+	_apply_font_scale()
 	_score.text = "Score: %d" % Game.score
 	var is_record: bool = Game.score >= Game.high_score and Game.score > 0
+	_high.text = "High Score: %d" % Game.high_score
+	_record.visible = is_record
 	if is_record:
-		_high.text = "High Score: %d" % Game.high_score
-		_record.visible = true
 		_start_record_pulse()
 	else:
-		_high.text = "High Score: %d" % Game.high_score
-		_record.visible = false
+		if _record_tween: _record_tween.kill()
 	show()
+	# Staggered entrance
 	_panel.pivot_offset = _panel.size * 0.5
 	_panel.modulate.a = 0.0
-	_panel.scale = Vector2(0.88, 0.88)
-	var t := create_tween().set_parallel(true)
-	t.tween_property(_panel, "modulate:a", 1.0, 0.4).set_ease(Tween.EASE_OUT)
-	t.tween_property(_panel, "scale", Vector2.ONE, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_panel.scale = Vector2(0.9, 0.9)
+	var children := [_title, _score, _high, _record, _restart, _menu]
+	for c in children:
+		c.modulate.a = 0.0
+		c.position.y += 10
+
+	var t := create_tween()
+	t.tween_property(_panel, "modulate:a", 1.0, 0.3).set_ease(Tween.EASE_OUT)
+	t.parallel().tween_property(_panel, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	for i in children.size():
+		if children[i] == _record and not is_record:
+			continue
+		t.tween_interval(0.07)
+		t.parallel().tween_property(children[i], "modulate:a", 1.0, 0.25)
+		t.parallel().tween_property(children[i], "position:y", children[i].position.y - 10, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_restart.grab_focus()
 
 
 func disappear() -> void:
-	if _record_tween:
-		_record_tween.kill()
-	hide()
+	if _record_tween: _record_tween.kill()
+	var t := create_tween()
+	t.tween_property(_panel, "modulate:a", 0.0, 0.2)
+	t.parallel().tween_property(_panel, "scale", Vector2(0.92, 0.92), 0.2)
+	t.finished.connect(hide)
 
 
 func _start_record_pulse() -> void:
-	if _record_tween:
-		_record_tween.kill()
-	_record.modulate = Color(0.55, 1.0, 0.35, 0)
-	_record.scale = Vector2(0.5, 0.5)
+	if _record_tween: _record_tween.kill()
+	_record.modulate = Color(0.5, 1.0, 0.4, 0)
+	_record.scale = Vector2(0.6, 0.6)
 	_record_tween = create_tween()
 	_record_tween.set_parallel(true)
-	_record_tween.tween_property(_record, "modulate:a", 1.0, 0.4)
-	_record_tween.tween_property(_record, "scale", Vector2.ONE, 0.5).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	_record_tween.chain().tween_property(_record, "modulate", Color(0.3, 1.0, 0.2), 0.5)
-	_record_tween.chain().tween_property(_record, "modulate", Color(0.55, 1.0, 0.35), 0.5)
+	_record_tween.tween_property(_record, "modulate:a", 1.0, 0.35)
+	_record_tween.tween_property(_record, "scale", Vector2.ONE, 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_record_tween.chain().tween_property(_record, "modulate", Palette.GAMEOVER_RECORD_GLOW, 0.5)
+	_record_tween.chain().tween_property(_record, "modulate", Palette.GAMEOVER_RECORD, 0.5)
 	_record_tween.set_loops()
