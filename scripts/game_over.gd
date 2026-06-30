@@ -58,6 +58,10 @@ func appear() -> void:
 	var is_record: bool = Game.last_run_is_record
 	_high.text = "High Score: %d" % Game.high_score
 	_record.visible = is_record
+	if is_record:
+		# Start hidden so the pulse entrance can animate it in cleanly.
+		_record.modulate = Color(0.5, 1.0, 0.4, 0)
+		_record.scale = Vector2(0.6, 0.6)
 	# Let the layout settle so VBoxContainer positions are final before we
 	# snapshot them for the entrance animation.
 	await get_tree().process_frame
@@ -67,15 +71,11 @@ func appear() -> void:
 	if _entrance_tween: _entrance_tween.kill()
 	# Snapshot current layout positions (must happen AFTER layout has settled).
 	var orig_positions: Dictionary = {}
-	var children_to_animate: Array = [_title, _score, _high]
-	if is_record:
-		children_to_animate.append(_record)
-	children_to_animate.append(_restart)
-	children_to_animate.append(_menu)
+	var children_to_animate: Array[Control] = [_title, _score, _high, _restart, _menu]
 	for c in children_to_animate:
 		orig_positions[c] = c.position.y
 	show()
-	# Staggered entrance
+	# Staggered entrance — panel first
 	_panel.pivot_offset = _panel.size * 0.5
 	_panel.modulate.a = 0.0
 	_panel.scale = Vector2(0.9, 0.9)
@@ -91,15 +91,16 @@ func appear() -> void:
 		_entrance_tween.tween_interval(0.07)
 		_entrance_tween.parallel().tween_property(c, "modulate:a", 1.0, 0.25)
 		_entrance_tween.parallel().tween_property(c, "position:y", orig_positions[c], 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	# Record pulse + focus after entrance
+	# Record label handled separately with its own pulse entrance.
+	if is_record:
+		_entrance_tween.chain().tween_callback(_start_record_pulse)
+	# Focus after entrance
 	_entrance_tween.chain().tween_callback(func():
 		_panel.modulate.a = 1.0
 		_panel.scale = Vector2.ONE
 		for c in children_to_animate:
 			c.modulate.a = 1.0
 			c.position.y = orig_positions[c]
-		if is_record:
-			_start_record_pulse()
 		_restart.grab_focus()
 	)
 
@@ -107,6 +108,7 @@ func appear() -> void:
 func disappear() -> void:
 	if _record_tween: _record_tween.kill()
 	if _entrance_tween: _entrance_tween.kill()
+	if _hover_tween: _hover_tween.kill()
 	if not visible:
 		return
 	var t := create_tween()
