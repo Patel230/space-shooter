@@ -15,7 +15,7 @@ signal start_requested
 @onready var _vol_row: HBoxContainer = $Center/Panel/VBox/VolumeRow
 @onready var _left_btn: Button = $Center/Panel/VBox/ShipRow/LeftBtn
 @onready var _right_btn: Button = $Center/Panel/VBox/ShipRow/RightBtn
-@onready var _ship_preview: TextureRect = $Center/Panel/VBox/ShipRow/ShipPreview
+@onready var _ship_preview: TextureRect = $Center/Panel/VBox/ShipRow/ShipFrame/ShipPreview
 @onready var _ship_name: Label = $Center/Panel/VBox/ShipNameLabel
 @onready var _ship_desc: Label = $Center/Panel/VBox/ShipDescLabel
 @onready var _ship_stats: Label = $Center/Panel/VBox/ShipStatsLabel
@@ -48,18 +48,18 @@ func _ready() -> void:
 
 func _apply_font_scale() -> void:
 	var s := Responsive.ui_scale()
-	_title.add_theme_font_size_override("font_size", maxi(24, int(40 * s)))
-	_sub.add_theme_font_size_override("font_size", maxi(11, int(16 * s)))
+	_title.add_theme_font_size_override("font_size", maxi(26, int(44 * s)))
+	_sub.add_theme_font_size_override("font_size", maxi(11, int(14 * s)))
 	_high.add_theme_font_size_override("font_size", maxi(13, int(18 * s)))
-	_play.add_theme_font_size_override("font_size", maxi(16, int(24 * s)))
-	_hint.add_theme_font_size_override("font_size", maxi(10, int(12 * s)))
+	_play.add_theme_font_size_override("font_size", maxi(20, int(28 * s)))
+	_hint.add_theme_font_size_override("font_size", maxi(10, int(11 * s)))
 	_vol_pct.add_theme_font_size_override("font_size", maxi(10, int(14 * s)))
-	_choose_label.add_theme_font_size_override("font_size", maxi(14, int(20 * s)))
+	_choose_label.add_theme_font_size_override("font_size", maxi(11, int(13 * s)))
 	_ship_name.add_theme_font_size_override("font_size", maxi(16, int(24 * s)))
-	_ship_desc.add_theme_font_size_override("font_size", maxi(10, int(14 * s)))
-	_ship_stats.add_theme_font_size_override("font_size", maxi(10, int(13 * s)))
-	_left_btn.add_theme_font_size_override("font_size", maxi(16, int(24 * s)))
-	_right_btn.add_theme_font_size_override("font_size", maxi(16, int(24 * s)))
+	_ship_desc.add_theme_font_size_override("font_size", maxi(10, int(13 * s)))
+	_ship_stats.add_theme_font_size_override("font_size", maxi(10, int(12 * s)))
+	_left_btn.add_theme_font_size_override("font_size", maxi(24, int(32 * s)))
+	_right_btn.add_theme_font_size_override("font_size", maxi(24, int(32 * s)))
 
 
 func _on_volume_changed(value: float) -> void:
