@@ -57,15 +57,15 @@ func _ready() -> void:
 
 func _apply_font_scale() -> void:
 	var s := Responsive.ui_scale()
-	_title.add_theme_font_size_override("font_size", maxi(32, int(56 * s)))
-	_sub.add_theme_font_size_override("font_size", maxi(10, int(13 * s)))
-	_high.add_theme_font_size_override("font_size", maxi(13, int(18 * s)))
+	_title.add_theme_font_size_override("font_size", maxi(34, int(56 * s)))
+	_sub.add_theme_font_size_override("font_size", maxi(13, int(18 * s)))
+	_high.add_theme_font_size_override("font_size", maxi(16, int(22 * s)))
 	_play.add_theme_font_size_override("font_size", maxi(22, int(32 * s)))
-	_hint.add_theme_font_size_override("font_size", maxi(10, int(11 * s)))
-	_vol_pct.add_theme_font_size_override("font_size", maxi(10, int(13 * s)))
-	_choose_label.add_theme_font_size_override("font_size", maxi(10, int(12 * s)))
-	_ship_name.add_theme_font_size_override("font_size", maxi(18, int(28 * s)))
-	_ship_desc.add_theme_font_size_override("font_size", maxi(10, int(13 * s)))
+	_hint.add_theme_font_size_override("font_size", maxi(11, int(14 * s)))
+	_vol_pct.add_theme_font_size_override("font_size", maxi(12, int(16 * s)))
+	_choose_label.add_theme_font_size_override("font_size", maxi(13, int(18 * s)))
+	_ship_name.add_theme_font_size_override("font_size", maxi(20, int(28 * s)))
+	_ship_desc.add_theme_font_size_override("font_size", maxi(12, int(16 * s)))
 	_left_btn.add_theme_font_size_override("font_size", maxi(26, int(36 * s)))
 	_right_btn.add_theme_font_size_override("font_size", maxi(26, int(36 * s)))
 
