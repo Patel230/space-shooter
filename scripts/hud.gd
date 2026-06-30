@@ -23,6 +23,7 @@ const COMBO_TIMEOUT := 2.0
 
 func _ready() -> void:
 	_apply_font_scale()
+	get_viewport().size_changed.connect(_apply_font_scale)
 	SignalBus.score_changed.connect(_on_score_changed)
 	SignalBus.lives_changed.connect(_on_lives_changed)
 	SignalBus.wave_changed.connect(_on_wave_changed)

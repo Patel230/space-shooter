@@ -30,6 +30,7 @@ func _ready() -> void:
 	# even if appear() is called twice in a row.
 	for c in [_title, _score, _high, _record, _restart, _menu]:
 		_orig_positions[c] = c.position.y
+	get_viewport().size_changed.connect(_apply_font_scale)
 
 
 func _btn_hover(b: Button) -> void:

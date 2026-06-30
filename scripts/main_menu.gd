@@ -24,6 +24,14 @@ signal start_requested
 @onready var _vol_slider: HSlider = $Center/Panel/Outer/Footer/VolumeRow/VolumeSlider
 @onready var _vol_pct: Label = $Center/Panel/Outer/Footer/VolumeRow/VolumePercent
 @onready var _hint: Label = $Center/Panel/Outer/Footer/HintLabel
+@onready var _body: BoxContainer = $Center/Panel/Outer/Body
+@onready var _left_col: VBoxContainer = $Center/Panel/Outer/Body/LeftCol
+@onready var _right_col: VBoxContainer = $Center/Panel/Outer/Body/RightCol
+@onready var _ship_frame_ctrl: Panel = $Center/Panel/Outer/Body/LeftCol/ShipRow/ShipFrame
+@onready var _ship_row: HBoxContainer = $Center/Panel/Outer/Body/LeftCol/ShipRow
+
+# Aspect ratio below which the body collapses into a single column.
+const NARROW_ASPECT := 1.05
 
 var _glow_tween: Tween
 var _float_tween: Tween
@@ -39,8 +47,8 @@ const SHIP_COOLDOWN_SLOW := 0.32
 
 
 func _ready() -> void:
-	_apply_font_scale()
-	get_viewport().size_changed.connect(_apply_font_scale)
+	_apply_layout()
+	get_viewport().size_changed.connect(_apply_layout)
 	_play.pressed.connect(func(): start_requested.emit())
 	_play.mouse_entered.connect(_on_play_hover)
 	_play.mouse_exited.connect(_on_play_unhover)
@@ -54,6 +62,30 @@ func _ready() -> void:
 	_ship_idx = Cfg.SHIP_ORDER.find(Game.selected_ship)
 	if _ship_idx < 0: _ship_idx = 1
 	_update_ship_display()
+
+
+func _apply_layout() -> void:
+	_apply_font_scale()
+	_apply_orientation()
+
+
+func _apply_orientation() -> void:
+	# Stack vertically when the panel is narrower than it is tall (phones in
+	# portrait, narrow browser windows). The HBoxContainer still arranges its
+	# children left-to-right in code, but vertical_layout swaps the layout
+	# direction.
+	var vp := Responsive.get_viewport_rect().size
+	var narrow := vp.x / maxf(vp.y, 1.0) < NARROW_ASPECT
+	_body.vertical = narrow
+	# Tighter ship frame on narrow screens so it doesn't dominate the column.
+	var s := Responsive.ui_scale()
+	var frame_size := 150.0 if narrow else 190.0
+	_ship_frame_ctrl.custom_minimum_size = Vector2(frame_size, frame_size) * s
+	_ship_row.custom_minimum_size.y = (170.0 if narrow else 200.0) * s
+	# On portrait, give arrows a square hit box; on landscape keep them tall.
+	var arrow_h := 80.0 if narrow else 110.0
+	_left_btn.custom_minimum_size = Vector2(56, arrow_h) * s
+	_right_btn.custom_minimum_size = Vector2(56, arrow_h) * s
 
 
 func _apply_font_scale() -> void:
@@ -143,7 +175,7 @@ func _start_animations() -> void:
 
 func appear() -> void:
 	show()
-	_apply_font_scale()
+	_apply_layout()
 	_update_ship_display()
 	if _glow_tween: _glow_tween.kill()
 	if _float_tween: _float_tween.kill()
