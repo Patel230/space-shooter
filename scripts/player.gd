@@ -25,6 +25,8 @@ var _touch_id: int = -1
 var _rapid_timer: Timer
 var _triple_timer: Timer
 var _invuln_tween: Tween
+var _ship_speed: float = Cfg.PLAYER_SPEED
+var _base_cooldown: float = Cfg.SHOOT_COOLDOWN
 
 
 func _ready() -> void:
@@ -38,9 +40,14 @@ func _ready() -> void:
 
 
 func reset() -> void:
+	# Apply selected ship stats
+	var ship: Dictionary = Cfg.SHIP_DEFS[Game.selected_ship]
+	_sprite.texture = ship.texture
+	_ship_speed = ship.speed
+	_base_cooldown = ship.cooldown
+	_triple = ship.triple
 	_can_shoot = true
 	_rapid = false
-	_triple = false
 	_touch_id = -1
 	_rapid_timer.stop()
 	_triple_timer.stop()
@@ -103,7 +110,7 @@ func _process(delta: float) -> void:
 
 func _move_keyboard(delta: float) -> void:
 	var dir := Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	position += dir * Cfg.PLAYER_SPEED * delta
+	position += dir * _ship_speed * delta
 	var half := _sprite.get_rect().size * _sprite.scale * 0.5
 	position = Responsive.clamp_to_screen(position, half)
 
@@ -112,7 +119,7 @@ func _move_keyboard(delta: float) -> void:
 
 func _shoot() -> void:
 	_can_shoot = false
-	_cooldown.start(Cfg.RAPID_COOLDOWN if _rapid else Cfg.SHOOT_COOLDOWN)
+	_cooldown.start(Cfg.RAPID_COOLDOWN if _rapid else _base_cooldown)
 	var base := _muzzle.global_position
 	if _triple:
 		fired.emit(base + Vector2(-14, 0), Vector2.UP.rotated(-0.18))

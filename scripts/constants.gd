@@ -6,7 +6,55 @@ class_name Cfg
 const BASE_WIDTH := 720.0
 const BASE_HEIGHT := 1280.0
 
-# --- Player ---
+# --- Ship types ---
+## Each ship has unique stats: speed, fire rate, starting lives, triple shot.
+enum ShipType { SCOUT, FIGHTER, TANK, BOMBER }
+
+const SHIP_DEFS := {
+	ShipType.SCOUT: {
+		"name": "SCOUT",
+		"texture": preload("res://art/kenney_space-shooter-remastered/PNG/playerShip1_blue.png"),
+		"speed": 560.0,
+		"cooldown": 0.18,
+		"lives": 2,
+		"triple": false,
+		"desc": "Fast & nimble",
+		"color": Color(0.3, 0.8, 1.0),
+	},
+	ShipType.FIGHTER: {
+		"name": "FIGHTER",
+		"texture": preload("res://art/kenney_space-shooter-remastered/PNG/playerShip2_orange.png"),
+		"speed": 460.0,
+		"cooldown": 0.22,
+		"lives": 3,
+		"triple": false,
+		"desc": "Balanced all-rounder",
+		"color": Color(1.0, 0.65, 0.2),
+	},
+	ShipType.TANK: {
+		"name": "TANK",
+		"texture": preload("res://art/kenney_space-shooter-remastered/PNG/playerShip3_green.png"),
+		"speed": 340.0,
+		"cooldown": 0.28,
+		"lives": 5,
+		"triple": true,
+		"desc": "Slow but tough",
+		"color": Color(0.4, 1.0, 0.35),
+	},
+	ShipType.BOMBER: {
+		"name": "BOMBER",
+		"texture": preload("res://art/kenney_space-shooter-remastered/PNG/playerShip1_red.png"),
+		"speed": 400.0,
+		"cooldown": 0.12,
+		"lives": 3,
+		"triple": false,
+		"desc": "Rapid fire blaster",
+		"color": Color(1.0, 0.35, 0.35),
+	},
+}
+const SHIP_ORDER: Array = [ShipType.SCOUT, ShipType.FIGHTER, ShipType.TANK, ShipType.BOMBER]
+
+# --- Player (defaults, overridden by selected ship) ---
 const PLAYER_SPEED := 460.0
 const SHOOT_COOLDOWN := 0.22
 const RAPID_COOLDOWN := 0.11

@@ -17,6 +17,7 @@ var wave: int = 0
 var high_score: int = 0
 var mute: bool = false
 var volume: float = 0.7
+var selected_ship: int = Cfg.ShipType.FIGHTER
 
 
 func _ready() -> void:
@@ -81,7 +82,8 @@ func set_state(new_state: State) -> void:
 
 func start_run() -> void:
 	score = 0
-	lives = MAX_LIVES
+	var ship_def: Dictionary = Cfg.SHIP_DEFS[selected_ship]
+	lives = ship_def.lives
 	wave = 0
 	SignalBus.score_changed.emit(score)
 	SignalBus.lives_changed.emit(lives)

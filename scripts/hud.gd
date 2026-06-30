@@ -34,12 +34,12 @@ func _ready() -> void:
 
 func _apply_font_scale() -> void:
 	var s := Responsive.ui_scale()
-	_score.add_theme_font_size_override("font_size", maxi(14, int(20 * s)))
-	_wave.add_theme_font_size_override("font_size", maxi(14, int(20 * s)))
-	_lives.add_theme_font_size_override("font_size", maxi(14, int(20 * s)))
-	_combo.add_theme_font_size_override("font_size", maxi(15, int(22 * s)))
-	_banner.add_theme_font_size_override("font_size", maxi(24, int(36 * s)))
-	_mute.add_theme_font_size_override("font_size", maxi(10, int(14 * s)))
+	_score.add_theme_font_size_override("font_size", maxi(18, int(26 * s)))
+	_wave.add_theme_font_size_override("font_size", maxi(18, int(26 * s)))
+	_lives.add_theme_font_size_override("font_size", maxi(18, int(26 * s)))
+	_combo.add_theme_font_size_override("font_size", maxi(18, int(26 * s)))
+	_banner.add_theme_font_size_override("font_size", maxi(28, int(42 * s)))
+	_mute.add_theme_font_size_override("font_size", maxi(12, int(18 * s)))
 
 
 func _process(delta: float) -> void:

@@ -15,20 +15,20 @@ grow_vertical = 2
 
 [node name="Panel" type="Panel" parent="Center"]
 theme = ExtResource("2_theme")
-custom_minimum_size = Vector2(360, 0)
+custom_minimum_size = Vector2(420, 0)
 
 [node name="VBox" type="VBoxContainer" parent="Center/Panel"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 14.0
-offset_top = 14.0
-offset_right = -14.0
-offset_bottom = -14.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
-theme_override_constants/separation = 4
+theme_override_constants/separation = 5
 
 [node name="TitleLabel" type="Label" parent="Center/Panel/VBox"]
 clip_text = true
@@ -37,7 +37,7 @@ theme_override_colors/font_color = Color(0.25, 0.95, 0.85, 1)
 theme_override_colors/font_shadow_color = Color(0.02, 0.2, 0.18, 0.9)
 theme_override_constants/shadow_offset_y = 2
 theme_override_constants/shadow_outline_size = 6
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 40
 text = "SPACE SHOOTER"
 
 [node name="SubLabel" type="Label" parent="Center/Panel/VBox"]
@@ -46,11 +46,67 @@ horizontal_alignment = 1
 theme_override_colors/font_color = Color(0.95, 0.3, 0.65, 1)
 theme_override_colors/font_shadow_color = Color(0.2, 0.02, 0.12, 0.5)
 theme_override_constants/shadow_offset_y = 1
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 16
 text = "Powered by Godot 4.7"
 
-[node name="Spacer" type="Control" parent="Center/Panel/VBox"]
+[node name="Spacer0" type="Control" parent="Center/Panel/VBox"]
 custom_minimum_size = Vector2(0, 8)
+
+[node name="ChooseShipLabel" type="Label" parent="Center/Panel/VBox"]
+clip_text = true
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 0.75, 0.2, 1)
+theme_override_colors/font_shadow_color = Color(0.25, 0.15, 0.02, 0.6)
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 20
+text = "CHOOSE YOUR SHIP"
+
+[node name="ShipRow" type="HBoxContainer" parent="Center/Panel/VBox"]
+custom_minimum_size = Vector2(0, 100)
+alignment = 1
+
+[node name="LeftBtn" type="Button" parent="Center/Panel/VBox/ShipRow"]
+custom_minimum_size = Vector2(48, 80)
+clip_text = true
+theme_override_font_sizes/font_size = 24
+text = "<"
+
+[node name="ShipPreview" type="TextureRect" parent="Center/Panel/VBox/ShipRow"]
+custom_minimum_size = Vector2(100, 100)
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RightBtn" type="Button" parent="Center/Panel/VBox/ShipRow"]
+custom_minimum_size = Vector2(48, 80)
+clip_text = true
+theme_override_font_sizes/font_size = 24
+text = ">"
+
+[node name="ShipNameLabel" type="Label" parent="Center/Panel/VBox"]
+clip_text = true
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.3, 0.8, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.02, 0.15, 0.2, 0.7)
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 24
+text = "FIGHTER"
+
+[node name="ShipDescLabel" type="Label" parent="Center/Panel/VBox"]
+clip_text = true
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.7, 0.68, 0.65, 1)
+theme_override_font_sizes/font_size = 14
+text = "Balanced all-rounder"
+
+[node name="ShipStatsLabel" type="Label" parent="Center/Panel/VBox"]
+clip_text = true
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.5, 0.48, 0.45, 1)
+theme_override_font_sizes/font_size = 13
+text = "Speed: Medium  |  Fire Rate: Normal  |  Lives: 3"
+
+[node name="Spacer1" type="Control" parent="Center/Panel/VBox"]
+custom_minimum_size = Vector2(0, 6)
 
 [node name="HighScoreLabel" type="Label" parent="Center/Panel/VBox"]
 clip_text = true
@@ -62,18 +118,18 @@ theme_override_font_sizes/font_size = 18
 text = "High Score: 0"
 
 [node name="Spacer2" type="Control" parent="Center/Panel/VBox"]
-custom_minimum_size = Vector2(0, 10)
+custom_minimum_size = Vector2(0, 8)
 
 [node name="PlayButton" type="Button" parent="Center/Panel/VBox"]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 52)
 clip_text = true
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 theme_override_colors/font_color = Color(0.98, 0.95, 0.9, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 text = "PLAY"
 
 [node name="Spacer3" type="Control" parent="Center/Panel/VBox"]
-custom_minimum_size = Vector2(0, 6)
+custom_minimum_size = Vector2(0, 4)
 
 [node name="VolumeRow" type="HBoxContainer" parent="Center/Panel/VBox"]
 custom_minimum_size = Vector2(0, 28)
@@ -81,9 +137,9 @@ custom_minimum_size = Vector2(0, 28)
 [node name="VolumeLabel" type="Label" parent="Center/Panel/VBox/VolumeRow"]
 clip_text = true
 theme_override_colors/font_color = Color(0.7, 0.68, 0.65, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 14
 text = "VOL"
-custom_minimum_size = Vector2(36, 0)
+custom_minimum_size = Vector2(40, 0)
 
 [node name="VolumeSlider" type="HSlider" parent="Center/Panel/VBox/VolumeRow"]
 custom_minimum_size = Vector2(0, 20)
@@ -96,17 +152,17 @@ value = 70.0
 clip_text = true
 horizontal_alignment = 2
 theme_override_colors/font_color = Color(0.25, 0.95, 0.85, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 14
 text = "70%"
-custom_minimum_size = Vector2(32, 0)
+custom_minimum_size = Vector2(36, 0)
 
 [node name="Spacer4" type="Control" parent="Center/Panel/VBox"]
-custom_minimum_size = Vector2(0, 6)
+custom_minimum_size = Vector2(0, 4)
 
 [node name="HintLabel" type="Label" parent="Center/Panel/VBox"]
 clip_text = true
 horizontal_alignment = 1
 autowrap_mode = 3
 theme_override_colors/font_color = Color(0.5, 0.48, 0.45, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 12
 text = "Arrows/WASD/Drag: Move    Space: Shoot    M: Mute"
