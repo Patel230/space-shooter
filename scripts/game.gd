@@ -16,6 +16,7 @@ var lives: int = MAX_LIVES
 var wave: int = 0
 var high_score: int = 0
 var mute: bool = false
+var volume: float = 0.7
 
 
 func _ready() -> void:
@@ -127,6 +128,13 @@ func toggle_mute() -> void:
 	_save()
 
 
+func set_volume(vol: float) -> void:
+	volume = clampf(vol, 0.0, 1.0)
+	Music.set_volume(volume)
+	SignalBus.volume_changed.emit(volume)
+	_save()
+
+
 func _load_save() -> void:
 	if not FileAccess.file_exists(SAVE_PATH):
 		return
@@ -144,10 +152,12 @@ func _load_save() -> void:
 		var idx := AudioServer.get_bus_index("Master")
 		if idx >= 0:
 			AudioServer.set_bus_mute(idx, mute)
+	if parsed.has("volume") and (parsed["volume"] is float or parsed["volume"] is int):
+		volume = clampf(float(parsed["volume"]), 0.0, 1.0)
 
 
 func _save() -> void:
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if f:
-		f.store_string(JSON.stringify({"high_score": high_score, "mute": mute}))
+		f.store_string(JSON.stringify({"high_score": high_score, "mute": mute, "volume": volume}))
 		f.close()

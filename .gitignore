@@ -1,6 +1,16 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+build/
+keystore/
+*.keystore
+*.jks
+.import/
+*.translation
 
 # macOS
 .DS_Store
+
+# Editor
+.vscode/
+.idea/

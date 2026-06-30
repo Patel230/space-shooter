@@ -170,7 +170,7 @@ func _setup_trail() -> void:
 	mat.gravity = Vector3.ZERO
 	mat.scale_min = 0.5
 	mat.scale_max = 1.1
-	mat.color = Color(0.4, 0.8, 1.0, 0.9)
+	mat.color = Palette.PLAYER_TRAIL
 	var trail: GPUParticles2D = $Trail
 	trail.process_material = mat
 	trail.amount = 24

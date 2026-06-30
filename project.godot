@@ -24,6 +24,7 @@ config/icon="res://icon.svg"
 
 SignalBus="*res://scripts/signal_bus.gd"
 Game="*res://scripts/game.gd"
+Music="*res://scripts/music_manager.gd"
 
 [display]
 

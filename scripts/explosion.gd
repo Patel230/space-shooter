@@ -28,9 +28,9 @@ func _ready() -> void:
 
 func _make_ramp() -> Gradient:
 	var ramp := Gradient.new()
-	ramp.set_color(0, Color(1.0, 1.0, 0.9, 1.0))
-	ramp.add_point(0.3, Color(1.0, 0.7, 0.2, 1.0))
+	ramp.set_color(0, Palette.EXPLOSION_CORE)
+	ramp.add_point(0.3, Palette.EXPLOSION_MID)
 	ramp.add_point(0.7, Color(0.9, 0.3, 0.1, 0.8))
-	ramp.set_color(1, Color(0.3, 0.05, 0.0, 0.0))
+	ramp.set_color(1, Palette.EXPLOSION_END)
 	ramp.set_offset(1, 1.0)
 	return ramp

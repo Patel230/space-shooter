@@ -145,10 +145,15 @@ func _spawn_explosion(pos: Vector2, big: bool) -> void:
 func _spawn_score_popup(pos: Vector2, value: int) -> void:
 	var label := Label.new()
 	label.text = "+%d" % value
-	label.position = pos + Vector2(randf_range(-20, 20), -10)
+	# Clamp popup position to stay on-screen
+	var vp := Responsive.get_viewport_rect().size
+	var px: float = clampf(pos.x + randf_range(-20, 20), 20.0, vp.x - 60.0)
+	var py: float = clampf(pos.y - 10, 20.0, vp.y - 40.0)
+	label.position = Vector2(px, py)
 	label.z_index = 10
-	label.add_theme_font_size_override("font_size", 26)
-	label.add_theme_color_override("font_color", Color(1, 0.85, 0.3))
+	label.clip_text = true
+	label.add_theme_font_size_override("font_size", 24)
+	label.add_theme_color_override("font_color", Palette.POPUP_COLOR)
 	_popups.add_child(label)
 	var t := create_tween()
 	t.set_parallel(true)
