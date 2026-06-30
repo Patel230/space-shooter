@@ -16,6 +16,7 @@ const SHIP_DEFS := {
 		"triple": false,
 		"desc": "Fast & nimble",
 		"color": Color(0.3, 0.8, 1.0),
+		"shoot_sfx": preload("res://art/kenney_space-shooter-remastered/Bonus/sfx_laser1.ogg"),
 	},
 	ShipType.FIGHTER: {
 		"name": "FIGHTER",
@@ -26,6 +27,7 @@ const SHIP_DEFS := {
 		"triple": false,
 		"desc": "Balanced all-rounder",
 		"color": Color(1.0, 0.65, 0.2),
+		"shoot_sfx": preload("res://art/kenney_space-shooter-remastered/Bonus/sfx_laser2.ogg"),
 	},
 	ShipType.TANK: {
 		"name": "TANK",
@@ -36,6 +38,7 @@ const SHIP_DEFS := {
 		"triple": true,
 		"desc": "Slow but tough",
 		"color": Color(0.4, 1.0, 0.35),
+		"shoot_sfx": preload("res://art/kenney_space-shooter-remastered/Bonus/sfx_twoTone.ogg"),
 	},
 	ShipType.BOMBER: {
 		"name": "BOMBER",
@@ -46,6 +49,7 @@ const SHIP_DEFS := {
 		"triple": false,
 		"desc": "Rapid fire blaster",
 		"color": Color(1.0, 0.35, 0.35),
+		"shoot_sfx": preload("res://art/kenney_ui-pack/Sounds/tap-a.ogg"),
 	},
 }
 const SHIP_ORDER: Array = [ShipType.SCOUT, ShipType.FIGHTER, ShipType.TANK, ShipType.BOMBER]

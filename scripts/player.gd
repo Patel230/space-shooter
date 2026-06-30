@@ -55,6 +55,8 @@ func reset() -> void:
 	_ship_speed = ship.speed
 	_base_cooldown = ship.cooldown
 	_ship_triple_default = ship.triple
+	if ship.has("shoot_sfx") and ship.shoot_sfx is AudioStream:
+		_sfx.stream = ship.shoot_sfx
 	_triple = _ship_triple_default
 	_can_shoot = true
 	_rapid = false
