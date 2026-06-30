@@ -13,5 +13,7 @@ script = ExtResource("1_s")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.8, 0.8)
 
+[node name="GlowParticles" type="GPUParticles2D" parent="."]
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RS")

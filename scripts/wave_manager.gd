@@ -55,7 +55,10 @@ func _begin_next_wave() -> void:
 	_timer.wait_time = _base_interval
 	_timer.start()
 	var galaxy_name: String = GalaxyBackground.GALAXIES[(_wave - 1) % GalaxyBackground.GALAXIES.size()].name
-	SignalBus.banner_requested.emit("Wave %d - %s" % [_wave, galaxy_name])
+	var wave_text := "Wave %d - %s" % [_wave, galaxy_name]
+	if _wave > 1:
+		SignalBus.shake_requested.emit(5.0, 0.25)
+	SignalBus.banner_requested.emit(wave_text)
 
 
 func _on_spawn_tick() -> void:

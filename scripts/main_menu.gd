@@ -112,13 +112,18 @@ func _update_ship_display(animate: bool = false) -> void:
 func _start_animations() -> void:
 	if _glow_tween: _glow_tween.kill()
 	_glow_tween = create_tween().set_loops()
-	_glow_tween.tween_property(_title, "modulate", Palette.MENU_TITLE, 1.6)
-	_glow_tween.tween_property(_title, "modulate", Palette.MENU_TITLE_GLOW, 1.6)
+	_glow_tween.tween_property(_title, "modulate", Palette.MENU_TITLE, 1.4)
+	_glow_tween.tween_property(_title, "modulate", Palette.MENU_TITLE_GLOW, 1.4)
 
 	if _float_tween: _float_tween.kill()
 	_float_tween = create_tween().set_loops()
-	_float_tween.tween_property(_title, "position:y", _title.position.y - 3, 2.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	_float_tween.tween_property(_title, "position:y", _title.position.y, 2.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_float_tween.tween_property(_title, "position:y", _title.position.y - 5, 2.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_float_tween.tween_property(_title, "position:y", _title.position.y, 2.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+	# Title pulse scale
+	var scale_t := create_tween().set_loops()
+	scale_t.tween_property(_title, "scale", Vector2(1.05, 1.05), 1.5).set_trans(Tween.TRANS_SINE)
+	scale_t.tween_property(_title, "scale", Vector2.ONE, 1.5).set_trans(Tween.TRANS_SINE)
 
 
 func appear() -> void:

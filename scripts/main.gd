@@ -146,20 +146,23 @@ func _spawn_explosion(pos: Vector2, big: bool) -> void:
 func _spawn_score_popup(pos: Vector2, value: int) -> void:
 	var label := Label.new()
 	label.text = "+%d" % value
-	# Clamp popup position to stay on-screen
 	var vp := Responsive.get_viewport_rect().size
 	var px: float = clampf(pos.x + randf_range(-20, 20), 20.0, vp.x - 60.0)
 	var py: float = clampf(pos.y - 10, 20.0, vp.y - 40.0)
 	label.position = Vector2(px, py)
 	label.z_index = 10
 	label.clip_text = true
-	label.add_theme_font_size_override("font_size", 24)
+	label.add_theme_font_size_override("font_size", 28)
 	label.add_theme_color_override("font_color", Palette.POPUP_COLOR)
+	label.add_theme_color_override("font_outline_color", Color(0.0, 0.1, 0.0, 0.8))
+	label.add_theme_constant_override("outline_size", 4)
 	_popups.add_child(label)
 	var t := create_tween()
 	t.set_parallel(true)
-	t.tween_property(label, "position:y", label.position.y - 60, 0.8)
-	t.tween_property(label, "modulate:a", 0.0, 0.8)
+	t.tween_property(label, "position:y", label.position.y - 70, 0.9).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_property(label, "scale", Vector2(1.3, 1.3), 0.15).set_trans(Tween.TRANS_BACK)
+	t.chain().tween_property(label, "scale", Vector2.ONE, 0.1)
+	t.chain().tween_property(label, "modulate:a", 0.0, 0.4)
 	t.finished.connect(label.queue_free)
 
 

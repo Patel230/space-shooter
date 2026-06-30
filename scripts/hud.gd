@@ -60,12 +60,15 @@ func _on_score_changed(s: int) -> void:
 	_combo_timer = COMBO_TIMEOUT
 	_show_combo()
 	if _score_tween: _score_tween.kill()
-	_score.scale = Vector2(1.25, 1.25)
+	_score.scale = Vector2(1.35, 1.35)
 	_score.modulate = Palette.SCORE_FLASH
 	_score_tween = create_tween()
 	_score_tween.set_parallel(true)
-	_score_tween.tween_property(_score, "scale", Vector2.ONE, 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	_score_tween.tween_property(_score, "modulate", Palette.SCORE_COLOR, 0.18)
+	_score_tween.tween_property(_score, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_score_tween.tween_property(_score, "modulate", Palette.SCORE_COLOR, 0.2)
+	# Add a slight rotation wiggle
+	_score.rotation = 0.08
+	_score_tween.tween_property(_score, "rotation", 0.0, 0.18).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 
 
 func _on_lives_changed(l: int) -> void:

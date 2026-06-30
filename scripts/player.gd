@@ -188,25 +188,35 @@ func _make_one_shot_timer(cb: Callable) -> Timer:
 func _setup_trail() -> void:
 	var mat := ParticleProcessMaterial.new()
 	mat.direction = Vector3(0, 1, 0)
-	mat.spread = 12.0
-	mat.initial_velocity_min = 40.0
-	mat.initial_velocity_max = 90.0
+	mat.spread = 15.0
+	mat.initial_velocity_min = 50.0
+	mat.initial_velocity_max = 110.0
 	mat.gravity = Vector3.ZERO
-	mat.scale_min = 0.5
-	mat.scale_max = 1.1
-	mat.color = Palette.PLAYER_TRAIL
+	mat.scale_min = 0.6
+	mat.scale_max = 1.3
+	var gradient := Gradient.new()
+	gradient.set_color(0, Palette.PLAYER_TRAIL)
+	gradient.add_point(0.5, Color(1.0, 0.9, 0.5, 0.6))
+	gradient.set_color(1, Color(1.0, 1.0, 0.7, 0.0))
+	var grad_tex := GradientTexture1D.new()
+	grad_tex.gradient = gradient
+	mat.color_ramp = grad_tex
 	var trail: GPUParticles2D = $Trail
 	trail.process_material = mat
-	trail.amount = 24
-	trail.lifetime = 0.4
+	trail.amount = 28
+	trail.lifetime = 0.45
 	trail.local_coords = false
 	trail.emitting = true
 
 
 func _muzzle_flash() -> void:
-	_sprite.scale = Vector2(2.15, 2.15)
+	_sprite.scale = Vector2(2.2, 2.2)
+	var color := Color(1.3, 1.3, 1.5)
+	_sprite.modulate = color
 	var t := create_tween()
-	t.tween_property(_sprite, "scale", Vector2(2, 2), 0.08).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.set_parallel(true)
+	t.tween_property(_sprite, "scale", Vector2(2, 2), 0.1).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_property(_sprite, "modulate", Color.WHITE, 0.12)
 
 
 func _on_invuln_end() -> void:

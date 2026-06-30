@@ -42,16 +42,23 @@ func _ready() -> void:
 	add_to_group("enemies")
 	hp = max_hp
 	_sprite.texture = ENEMY_TEXTURES.pick_random()
+	# Color tint based on HP
+	if max_hp >= 3:
+		_sprite.modulate = Color(1.1, 0.8, 0.8)
+	elif max_hp == 2:
+		_sprite.modulate = Color(1.0, 1.0, 0.9)
 	_shoot_timer.wait_time = randf_range(shoot_interval * 0.5, shoot_interval * 1.5)
 	_shoot_timer.timeout.connect(_on_shoot)
 	_shoot_timer.start()
-	# Entrance animation: scale-in + fade-in
+	# Entrance animation: scale-in + fade-in with rotation
 	_sprite.scale = Vector2(0.1, 0.1)
 	_sprite.modulate.a = 0.0
+	_sprite.rotation = randf_range(-PI, PI)
 	var t := create_tween()
 	t.set_parallel(true)
-	t.tween_property(_sprite, "scale", Vector2(1.5, 1.5), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	t.tween_property(_sprite, "modulate:a", 1.0, 0.2)
+	t.tween_property(_sprite, "scale", Vector2(1.5, 1.5), 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_property(_sprite, "modulate:a", 1.0, 0.25)
+	t.tween_property(_sprite, "rotation", 0.0, 0.4).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 
 
 func _process(delta: float) -> void:
@@ -75,9 +82,14 @@ func take_damage(amount: int) -> void:
 func _flash() -> void:
 	if _flash_tween:
 		_flash_tween.kill()
-	_sprite.modulate = Color(3.0, 3.0, 3.0, 1.0)
+	# Colorful flash based on HP
+	var flash_color := Color(3.0, 3.0, 3.0, 1.0) if hp > 1 else Color(3.5, 2.0, 1.5, 1.0)
+	_sprite.modulate = flash_color
+	_sprite.scale = Vector2(1.65, 1.65)
 	_flash_tween = create_tween()
+	_flash_tween.set_parallel(true)
 	_flash_tween.tween_property(_sprite, "modulate", Color.WHITE, 0.12)
+	_flash_tween.tween_property(_sprite, "scale", Vector2(1.5, 1.5), 0.1).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 
 func _on_shoot() -> void:
