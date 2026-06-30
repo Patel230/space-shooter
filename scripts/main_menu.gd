@@ -95,7 +95,7 @@ func _apply_font_scale() -> void:
 	_high.add_theme_font_size_override("font_size", maxi(16, int(22 * s)))
 	_play.add_theme_font_size_override("font_size", maxi(22, int(32 * s)))
 	_hint.add_theme_font_size_override("font_size", maxi(11, int(14 * s)))
-	_vol_pct.add_theme_font_size_override("font_size", maxi(12, int(16 * s)))
+	_vol_pct.add_theme_font_size_override("font_size", maxi(16, int(20 * s)))
 	_choose_label.add_theme_font_size_override("font_size", maxi(13, int(18 * s)))
 	_ship_name.add_theme_font_size_override("font_size", maxi(20, int(28 * s)))
 	_ship_desc.add_theme_font_size_override("font_size", maxi(12, int(16 * s)))

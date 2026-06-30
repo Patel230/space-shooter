@@ -446,19 +446,21 @@ text = "PLAY"
 theme_override_constants/separation = 6
 
 [node name="VolumeRow" type="HBoxContainer" parent="Center/Panel/Outer/Footer"]
-custom_minimum_size = Vector2(0, 26)
-theme_override_constants/separation = 12
+custom_minimum_size = Vector2(0, 40)
+theme_override_constants/separation = 16
 
 [node name="VolumeLabel" type="Label" parent="Center/Panel/Outer/Footer/VolumeRow"]
 clip_text = true
 vertical_alignment = 1
-theme_override_colors/font_color = Color(0.3, 1.0, 0.88, 0.95)
-theme_override_font_sizes/font_size = 16
-text = "VOL"
-custom_minimum_size = Vector2(48, 0)
+theme_override_colors/font_color = Color(0.4, 1.0, 0.92, 1)
+theme_override_colors/font_shadow_color = Color(0.02, 0.2, 0.18, 0.7)
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 20
+text = "VOLUME"
+custom_minimum_size = Vector2(96, 0)
 
 [node name="VolumeSlider" type="HSlider" parent="Center/Panel/Outer/Footer/VolumeRow"]
-custom_minimum_size = Vector2(0, 20)
+custom_minimum_size = Vector2(0, 32)
 size_flags_horizontal = 3
 size_flags_vertical = 4
 min_value = 0.0
@@ -469,10 +471,12 @@ value = 70.0
 clip_text = true
 horizontal_alignment = 2
 vertical_alignment = 1
-theme_override_colors/font_color = Color(0.3, 1.0, 0.88, 0.95)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.02, 0.2, 0.18, 0.7)
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 20
 text = "70%"
-custom_minimum_size = Vector2(56, 0)
+custom_minimum_size = Vector2(72, 0)
 
 [node name="HintLabel" type="Label" parent="Center/Panel/Outer/Footer"]
 custom_minimum_size = Vector2(0, 28)
