@@ -2,10 +2,6 @@ class_name Cfg
 ## Centralized, tunable configuration. Pure constants - no state.
 ## Accessed as `Cfg.PLAYER_SPEED` from anywhere.
 
-# --- Viewport ---
-const BASE_WIDTH := 720.0
-const BASE_HEIGHT := 1280.0
-
 # --- Ship types ---
 ## Each ship has unique stats: speed, fire rate, starting lives, triple shot.
 enum ShipType { SCOUT, FIGHTER, TANK, BOMBER }
@@ -91,4 +87,3 @@ const SHAKE_HIT_AMOUNT := 8.0
 const SHAKE_HIT_DURATION := 0.3
 const SHAKE_DEATH_AMOUNT := 16.0
 const SHAKE_DEATH_DURATION := 0.5
-const STAR_COUNT := 90

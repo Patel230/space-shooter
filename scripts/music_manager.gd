@@ -30,7 +30,6 @@ var _playback: AudioStreamPlayback
 
 # Phases (one per oscillator channel)
 var _p_bass: float = 0.0
-var _p_sub: float = 0.0
 var _p_pad: float = 0.0
 var _p_arp: float = 0.0
 var _p_lead: float = 0.0
@@ -40,10 +39,10 @@ var _p_kick: float = 0.0
 # Musical state
 var _sample_count: int = 0
 var _bar_start_sample: int = 0
-var _bar_index: int = 0
 var _chord_index: int = 0
 var _arp_step: int = 0
 var _kick_env: float = 0.0  # envelope state
+var _prev_beat: int = -1
 
 # Dynamic control
 var _intensity: float = 0.3
@@ -64,7 +63,10 @@ func _ready() -> void:
 	_player.volume_db = linear_to_db(Game.volume)
 	SignalBus.state_changed.connect(_on_state_changed)
 	SignalBus.volume_changed.connect(_on_volume_changed)
-	_running = true
+	SignalBus.mute_changed.connect(_on_mute_changed)
+	_running = not Game.mute
+	if Game.mute:
+		_player.stop()
 
 
 func _on_state_changed(state: int) -> void:
@@ -76,6 +78,15 @@ func _on_state_changed(state: int) -> void:
 
 func _on_volume_changed(v: float) -> void:
 	_player.volume_db = linear_to_db(clampf(v, 0.0, 1.0))
+
+
+func _on_mute_changed(muted: bool) -> void:
+	_running = not muted
+	if muted:
+		_player.stop()
+	else:
+		_player.play()
+		_playback = _player.get_stream_playback()
 
 
 func _process(delta: float) -> void:
@@ -104,14 +115,15 @@ func _fill_buffer() -> void:
 		if local >= bar_len:
 			_bar_start_sample = _sample_count
 			local = 0
-			_bar_index += 1
 			_chord_index = (_chord_index + 1) % CHORD_HZ.size()
 			_arp_step = 0
 		var beat: int = (local * 4) / bar_len  # 0..3
 		var in_beat: float = float((local * 4) % bar_len) / float(bar_len)  # 0..1 within beat
-		# Trigger kick on beat 1 and 3 of every bar (with slight swing when intense)
-		if (beat == 0 or beat == 2) and in_beat < 0.04:
+		# Edge-trigger kick on beat 1 and 3; reset phase so the waveform starts at 0
+		if beat != _prev_beat and (beat == 0 or beat == 2):
 			_kick_env = 1.0
+			_p_kick = 0.0
+		_prev_beat = beat
 		# Advance arp step every 1/8 note
 		var eighth: int = (local * 8) / bar_len
 		if eighth != _arp_step:
@@ -156,8 +168,13 @@ func _mix(beat: int, in_beat: float, eighth: int) -> float:
 
 	# 4. ARP: bright pluck on each 8th note, cycling through chord tones
 	_p_arp += INV_SR
-	var arp_notes: Array = [chord[0] * 2.0, chord[1] * 2.0, chord[2] * 2.0, chord[1] * 2.0]
-	var arp_freq: float = arp_notes[eighth % arp_notes.size()]
+	var arp_idx := eighth & 3
+	var note: float = chord[1]
+	if arp_idx == 0:
+		note = chord[0]
+	elif arp_idx == 2:
+		note = chord[2]
+	var arp_freq: float = note * 2.0
 	# Pluck envelope: per-beat restart
 	var arp_env: float = pow(1.0 - in_beat, 2.0) if in_beat < 1.0 else 0.0
 	var arp := sin(_p_arp * TAU * arp_freq) * arp_env * (0.06 + _intensity * 0.08)

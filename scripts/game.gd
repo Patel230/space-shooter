@@ -6,13 +6,11 @@ extends Node
 enum State { MENU, PLAYING, GAME_OVER }
 
 const SAVE_PATH := "user://space_shooter_save.json"
-const MAX_LIVES := 3
-
-signal state_changed(state: State)
 
 var _state: State = State.MENU
 var score: int = 0
-var lives: int = MAX_LIVES
+var lives: int = 3
+var _max_lives: int = 3
 var wave: int = 0
 var high_score: int = 0
 var mute: bool = false
@@ -76,7 +74,6 @@ func set_state(new_state: State) -> void:
 	if _state == new_state:
 		return
 	_state = new_state
-	state_changed.emit(new_state)
 	SignalBus.state_changed.emit(new_state)
 
 
@@ -84,6 +81,7 @@ func start_run() -> void:
 	score = 0
 	var ship_def: Dictionary = Cfg.SHIP_DEFS[selected_ship]
 	lives = ship_def.lives
+	_max_lives = ship_def.lives
 	wave = 0
 	SignalBus.score_changed.emit(score)
 	SignalBus.lives_changed.emit(lives)
@@ -102,7 +100,7 @@ func lose_life() -> void:
 
 
 func gain_life() -> void:
-	lives = mini(MAX_LIVES, lives + 1)
+	lives = mini(_max_lives, lives + 1)
 	SignalBus.lives_changed.emit(lives)
 
 

@@ -17,6 +17,6 @@ signal powerup_collected(type: int)
 signal state_changed(state: int)
 
 signal shake_requested(amount: float, duration: float)
-signal banner_requested(text: String)
+signal banner_requested(text: String, color: Color)
 signal mute_changed(muted: bool)
 signal volume_changed(volume: float)

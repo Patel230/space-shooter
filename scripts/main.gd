@@ -34,6 +34,7 @@ func _ready() -> void:
 	_hit_stop_timer.timeout.connect(_on_hit_stop_timeout)
 	add_child(_hit_stop_timer)
 	_connect_signals()
+	_apply_sfx_volume(Game.volume)
 	_show_menu()
 
 
@@ -44,6 +45,7 @@ func _connect_signals() -> void:
 	SignalBus.powerup_collected.connect(_on_powerup)
 	SignalBus.shake_requested.connect(_shake)
 	SignalBus.state_changed.connect(_on_state_changed)
+	SignalBus.volume_changed.connect(_apply_sfx_volume)
 	_menu.start_requested.connect(_start_game)
 	_gameover.restart_requested.connect(_start_game)
 	_gameover.menu_requested.connect(_show_menu)
@@ -119,7 +121,7 @@ func _on_enemy_killed(pos: Vector2, score_value: int) -> void:
 
 
 func _on_wave_cleared() -> void:
-	SignalBus.banner_requested.emit("Wave Cleared!")
+	SignalBus.banner_requested.emit("Wave Cleared!", Palette.WAVE_CLEARED_COLOR)
 
 
 func _on_player_hit() -> void:
@@ -208,6 +210,14 @@ func _on_hit_stop_timeout() -> void:
 func _play(stream: AudioStreamPlayer) -> void:
 	if not Game.mute:
 		stream.play()
+
+
+func _apply_sfx_volume(v: float) -> void:
+	var db := linear_to_db(clampf(v, 0.0001, 1.0))
+	_sfx_explosion.volume_db = db
+	_sfx_hit.volume_db = db
+	_sfx_powerup.volume_db = db
+	_sfx_gameover.volume_db = db
 
 
 func _clear_world() -> void:

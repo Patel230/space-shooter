@@ -22,6 +22,7 @@ var _layers: Array = []
 
 func _ready() -> void:
 	_populate()
+	get_viewport().size_changed.connect(_populate)
 
 
 func _populate() -> void:
@@ -38,15 +39,14 @@ func _populate() -> void:
 				"color": STAR_COLORS.pick_random(),
 				"twinkle_phase": randf() * TAU,
 				"twinkle_speed": randf_range(2.0, 5.0),
-				"streak": cfg.streak,
 			})
-		_layers.append(stars)
+		_layers.append({"streak": cfg.streak, "stars": stars})
 
 
 func _process(delta: float) -> void:
 	var size := Responsive.get_viewport_rect().size
 	for layer in _layers:
-		for star: Dictionary in layer:
+		for star: Dictionary in layer.stars:
 			star.pos.y += star.speed * delta
 			if star.pos.y > size.y + 20.0:
 				star.pos.y = -20.0
@@ -57,12 +57,12 @@ func _process(delta: float) -> void:
 func _draw() -> void:
 	var _t := Time.get_ticks_msec() / 1000.0
 	for layer in _layers:
-		for star: Dictionary in layer:
+		var streak: bool = layer.streak
+		for star: Dictionary in layer.stars:
 			var twinkle := 0.7 + sin(_t * star.twinkle_speed + star.twinkle_phase) * 0.3
 			var c: Color = star.color
 			var a: float = star.alpha * twinkle
-			if star.streak:
-				# Draw streak line for fast near-layer stars
+			if streak:
 				var streak_len: float = star.speed * 0.04
 				draw_line(star.pos, Vector2(star.pos.x, star.pos.y - streak_len),
 						Color(c.r, c.g, c.b, a * 0.5), star.size)

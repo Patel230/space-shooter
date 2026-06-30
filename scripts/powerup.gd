@@ -118,5 +118,7 @@ func _spawn_collect_burst() -> void:
 
 
 func _on_area_entered(area: Area2D) -> void:
+	if Game.get_state() != Game.State.PLAYING:
+		return
 	if area.is_in_group("player") and area.has_method("apply_powerup"):
 		apply_to(area)

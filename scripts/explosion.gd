@@ -49,7 +49,7 @@ func _process(_delta: float) -> void:
 
 func _draw() -> void:
 	if _ring_progress < 1.0:
-		var radius: float = _ring_progress * 60.0 * scale.x
+		var radius: float = _ring_progress * 60.0
 		var alpha: float = (1.0 - _ring_progress) * 0.6
 		var thickness: float = 3.0 + _ring_progress * 2.0
 		draw_arc(Vector2.ZERO, radius, 0, TAU, 32,

@@ -28,8 +28,41 @@ func _ready() -> void:
 	SignalBus.wave_changed.connect(_on_wave_changed)
 	SignalBus.banner_requested.connect(_show_banner)
 	SignalBus.mute_changed.connect(func(m): _mute.visible = m)
+	SignalBus.state_changed.connect(_on_state_changed)
 	_mute.visible = Game.mute
 	_combo.visible = false
+	_banner.visible = false
+	_apply_state_visibility(Game.get_state())
+
+
+func _on_state_changed(state: int) -> void:
+	_apply_state_visibility(state)
+
+
+func _apply_state_visibility(state: int) -> void:
+	# Hide the gameplay HUD on menu / game-over screens, but keep the mute
+	# indicator available across all states.
+	var playing := state == Game.State.PLAYING
+	_score.visible = playing
+	_wave.visible = playing
+	_lives.visible = playing
+	if playing:
+		# Snap the rolling counter so a restart doesn't carry over the previous
+		# run's displayed score.
+		_displayed_score = Game.score
+		_score.text = "SCORE: %d" % _displayed_score
+	else:
+		_combo.visible = false
+		_combo_count = 0
+		_combo_timer = 0.0
+		_kill_all_banner_tweens()
+		_banner.visible = false
+
+
+func _kill_all_banner_tweens() -> void:
+	if _banner_tween:
+		_banner_tween.kill()
+		_banner_tween = null
 
 
 func _apply_font_scale() -> void:
@@ -117,11 +150,19 @@ func _hide_combo() -> void:
 	_combo_tween.finished.connect(func(): _combo.visible = false; _combo.modulate.a = 1.0)
 
 
-func _show_banner(text: String) -> void:
+func _show_banner(text: String, color: Color = Palette.BANNER_COLOR) -> void:
+	# Banners only make sense while playing — drop late emits arriving during
+	# state transitions.
+	if Game.get_state() != Game.State.PLAYING:
+		return
 	_banner.text = text
+	_banner.add_theme_color_override("font_color", color)
+	# Subtle shadow that matches the banner color for a glow effect.
+	var shadow := Color(color.r * 0.25, color.g * 0.25, color.b * 0.25, 0.8)
+	_banner.add_theme_color_override("font_shadow_color", shadow)
 	_banner.show()
 	if _banner_tween: _banner_tween.kill()
-	_banner.modulate = Color(Palette.BANNER_COLOR.r, Palette.BANNER_COLOR.g, Palette.BANNER_COLOR.b, 0.0)
+	_banner.modulate = Color(1, 1, 1, 0.0)
 	_banner.scale = Vector2(0.7, 0.7)
 	_banner_tween = create_tween()
 	_banner_tween.set_parallel(true)

@@ -21,6 +21,9 @@ const _TEXTURES := {
 var _can_shoot: bool = true
 var _rapid: bool = false
 var _triple: bool = false
+# True if the equipped ship has built-in triple shot. The powerup overrides
+# _triple temporarily, but expiry must fall back to the ship default.
+var _ship_triple_default: bool = false
 var _touch_id: int = -1
 var _rapid_timer: Timer
 var _triple_timer: Timer
@@ -37,6 +40,12 @@ func _ready() -> void:
 	_rapid_timer = _make_one_shot_timer(_on_rapid_end)
 	_triple_timer = _make_one_shot_timer(_on_triple_end)
 	_setup_trail()
+	SignalBus.volume_changed.connect(_on_volume_changed)
+	_on_volume_changed(Game.volume)
+
+
+func _on_volume_changed(v: float) -> void:
+	_sfx.volume_db = linear_to_db(clampf(v, 0.0001, 1.0))
 
 
 func reset() -> void:
@@ -45,7 +54,8 @@ func reset() -> void:
 	_sprite.texture = ship.texture
 	_ship_speed = ship.speed
 	_base_cooldown = ship.cooldown
-	_triple = ship.triple
+	_ship_triple_default = ship.triple
+	_triple = _ship_triple_default
 	_can_shoot = true
 	_rapid = false
 	_touch_id = -1
@@ -135,6 +145,8 @@ func _shoot() -> void:
 # --- Collisions ---
 
 func _on_area_entered(area: Area2D) -> void:
+	if Game.get_state() != Game.State.PLAYING:
+		return
 	if area.is_in_group("enemies"):
 		if area.has_method("take_damage"):
 			area.take_damage(99)
@@ -144,6 +156,8 @@ func _on_area_entered(area: Area2D) -> void:
 # --- Damage ---
 
 func take_hit() -> void:
+	if Game.get_state() != Game.State.PLAYING:
+		return
 	if not _invuln.is_stopped():
 		return
 	Game.lose_life()
@@ -231,7 +245,8 @@ func _on_rapid_end() -> void:
 
 
 func _on_triple_end() -> void:
-	_triple = false
+	# Don't override the ship's built-in triple shot when the powerup expires.
+	_triple = _ship_triple_default
 
 
 static func powerup_texture(type: int) -> Texture2D:
