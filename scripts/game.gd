@@ -20,26 +20,28 @@ var volume: float = 0.7
 
 
 func _ready() -> void:
-	_setup_input_map()
+	_ensure_input_map()
 	_load_save()
 	SignalBus.player_died.connect(_on_player_died)
 	SignalBus.enemy_killed.connect(_on_enemy_killed)
 
 
-func _setup_input_map() -> void:
-	_add_key_action("move_left",  [KEY_LEFT,  KEY_A])
-	_add_key_action("move_right", [KEY_RIGHT, KEY_D])
-	_add_key_action("move_up",    [KEY_UP,    KEY_W])
-	_add_key_action("move_down",  [KEY_DOWN,  KEY_S])
-	_add_key_action("shoot",      [KEY_SPACE])
-	_add_joy_axis("move_left",  JOY_AXIS_LEFT_X, -1.0)
-	_add_joy_axis("move_right", JOY_AXIS_LEFT_X,  1.0)
-	_add_joy_axis("move_up",    JOY_AXIS_LEFT_Y, -1.0)
-	_add_joy_axis("move_down",  JOY_AXIS_LEFT_Y,  1.0)
-	_add_joy_button("shoot", JOY_BUTTON_A)
+func _ensure_input_map() -> void:
+	# Input actions are defined in project.godot [input] section.
+	# This is a fallback: add any that are missing at runtime.
+	_ensure_key_action("move_left",  [KEY_LEFT,  KEY_A])
+	_ensure_key_action("move_right", [KEY_RIGHT, KEY_D])
+	_ensure_key_action("move_up",    [KEY_UP,    KEY_W])
+	_ensure_key_action("move_down",  [KEY_DOWN,  KEY_S])
+	_ensure_key_action("shoot",      [KEY_SPACE])
+	_ensure_joy_axis("move_left",  JOY_AXIS_LEFT_X, -1.0)
+	_ensure_joy_axis("move_right", JOY_AXIS_LEFT_X,  1.0)
+	_ensure_joy_axis("move_up",    JOY_AXIS_LEFT_Y, -1.0)
+	_ensure_joy_axis("move_down",  JOY_AXIS_LEFT_Y,  1.0)
+	_ensure_joy_button("shoot", JOY_BUTTON_A)
 
 
-func _add_key_action(action: String, keys: Array[Key]) -> void:
+func _ensure_key_action(action: String, keys: Array[Key]) -> void:
 	if not InputMap.has_action(action):
 		InputMap.add_action(action)
 	for key_code: Key in keys:
@@ -48,7 +50,7 @@ func _add_key_action(action: String, keys: Array[Key]) -> void:
 		InputMap.action_add_event(action, event)
 
 
-func _add_joy_axis(action: String, axis: int, sign_val: float) -> void:
+func _ensure_joy_axis(action: String, axis: int, sign_val: float) -> void:
 	if not InputMap.has_action(action):
 		return
 	var event := InputEventJoypadMotion.new()
@@ -57,7 +59,7 @@ func _add_joy_axis(action: String, axis: int, sign_val: float) -> void:
 	InputMap.action_add_event(action, event)
 
 
-func _add_joy_button(action: String, button: int) -> void:
+func _ensure_joy_button(action: String, button: int) -> void:
 	if not InputMap.has_action(action):
 		return
 	var event := InputEventJoypadButton.new()
