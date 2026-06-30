@@ -110,20 +110,13 @@ func _update_ship_display(animate: bool = false) -> void:
 
 
 func _start_animations() -> void:
+	# Title color pulse — modulate is safe to tween on VBox children
 	if _glow_tween: _glow_tween.kill()
 	_glow_tween = create_tween().set_loops()
 	_glow_tween.tween_property(_title, "modulate", Palette.MENU_TITLE, 1.4)
 	_glow_tween.tween_property(_title, "modulate", Palette.MENU_TITLE_GLOW, 1.4)
-
-	if _float_tween: _float_tween.kill()
-	_float_tween = create_tween().set_loops()
-	_float_tween.tween_property(_title, "position:y", _title.position.y - 5, 2.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	_float_tween.tween_property(_title, "position:y", _title.position.y, 2.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-
-	# Title pulse scale
-	var scale_t := create_tween().set_loops()
-	scale_t.tween_property(_title, "scale", Vector2(1.05, 1.05), 1.5).set_trans(Tween.TRANS_SINE)
-	scale_t.tween_property(_title, "scale", Vector2.ONE, 1.5).set_trans(Tween.TRANS_SINE)
+	# NOTE: do not tween position or scale on VBoxContainer children;
+	# the container resets them every frame, which can leave them invisible.
 
 
 func appear() -> void:
@@ -132,23 +125,17 @@ func appear() -> void:
 	_update_ship_display()
 	if _glow_tween: _glow_tween.kill()
 	if _float_tween: _float_tween.kill()
+	# Ensure all children are fully opaque — they were previously hidden by old animation logic
+	var children := [_title, _sub, _choose_label, _ship_row, _ship_name, _ship_desc, _ship_stats, _high, _play, _vol_row, _hint]
+	for c in children:
+		c.modulate.a = 1.0
 	_panel.pivot_offset = _panel.size * 0.5
 	_panel.modulate.a = 0.0
-	_panel.scale = Vector2(0.9, 0.9)
-	var children := [_title, _sub, _choose_label, _ship_row, _ship_name, _ship_desc, _ship_stats, _high, _play, _vol_row, _hint]
-	var orig_y: Array = []
-	for c in children:
-		orig_y.append(c.position.y)
-		c.modulate.a = 0.0
-		c.position.y += 12
+	_panel.scale = Vector2(0.92, 0.92)
 
 	var t := create_tween()
-	t.tween_property(_panel, "modulate:a", 1.0, 0.3).set_ease(Tween.EASE_OUT)
-	t.parallel().tween_property(_panel, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	for i in children.size():
-		t.tween_interval(0.05)
-		t.parallel().tween_property(children[i], "modulate:a", 1.0, 0.22)
-		t.parallel().tween_property(children[i], "position:y", orig_y[i], 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_property(_panel, "modulate:a", 1.0, 0.25).set_ease(Tween.EASE_OUT)
+	t.parallel().tween_property(_panel, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	t.chain().tween_callback(_start_animations)
 	t.chain().tween_callback(func():
 		_play.grab_focus()
