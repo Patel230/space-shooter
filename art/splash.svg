@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="65%">
+      <stop offset="0%" stop-color="#1a3a3a"/>
+      <stop offset="55%" stop-color="#0a1a20"/>
+      <stop offset="100%" stop-color="#020608"/>
+    </radialGradient>
+    <linearGradient id="ship" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7afbe8"/>
+      <stop offset="100%" stop-color="#1f7d72"/>
+    </linearGradient>
+    <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ff5fa8"/>
+      <stop offset="100%" stop-color="#ff5fa8" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="softglow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="800" fill="url(#bg)"/>
+
+  <!-- Background stars -->
+  <g fill="#ffffff" opacity="0.85">
+    <circle cx="80" cy="120" r="1.4"/>
+    <circle cx="170" cy="60" r="0.9"/>
+    <circle cx="250" cy="180" r="1.2"/>
+    <circle cx="380" cy="80" r="0.8"/>
+    <circle cx="500" cy="140" r="1.6"/>
+    <circle cx="620" cy="60" r="1.0"/>
+    <circle cx="720" cy="200" r="1.3"/>
+    <circle cx="40" cy="320" r="1.0"/>
+    <circle cx="120" cy="430" r="1.4"/>
+    <circle cx="700" cy="380" r="1.1"/>
+    <circle cx="760" cy="500" r="1.5"/>
+    <circle cx="90" cy="620" r="1.2"/>
+    <circle cx="220" cy="720" r="1.3"/>
+    <circle cx="600" cy="680" r="1.5"/>
+    <circle cx="720" cy="740" r="1.0"/>
+    <circle cx="450" cy="730" r="0.9"/>
+  </g>
+  <g fill="#a0e8ff" opacity="0.6">
+    <circle cx="310" cy="120" r="0.6"/>
+    <circle cx="560" cy="240" r="0.7"/>
+    <circle cx="660" cy="540" r="0.6"/>
+    <circle cx="290" cy="650" r="0.7"/>
+    <circle cx="180" cy="290" r="0.5"/>
+  </g>
+
+  <!-- Soft halo behind the ship -->
+  <circle cx="400" cy="360" r="180" fill="#3affe6" opacity="0.18" filter="url(#softglow)"/>
+  <circle cx="400" cy="360" r="100" fill="#ff5fa8" opacity="0.10" filter="url(#softglow)"/>
+
+  <!-- Engine flame -->
+  <g filter="url(#glow)">
+    <path d="M380 500 L400 600 L420 500 Z" fill="url(#flame)"/>
+    <path d="M390 500 L400 560 L410 500 Z" fill="#ffd8ff" opacity="0.9"/>
+  </g>
+
+  <!-- Ship body -->
+  <g filter="url(#glow)">
+    <!-- main fuselage -->
+    <path d="M400 220
+             L460 360
+             L440 480
+             L400 470
+             L360 480
+             L340 360 Z"
+          fill="url(#ship)" stroke="#7afbe8" stroke-width="3"/>
+    <!-- left wing -->
+    <path d="M340 360 L250 430 L260 470 L355 440 Z"
+          fill="#1f6f6a" stroke="#7afbe8" stroke-width="2.5"/>
+    <!-- right wing -->
+    <path d="M460 360 L550 430 L540 470 L445 440 Z"
+          fill="#1f6f6a" stroke="#7afbe8" stroke-width="2.5"/>
+    <!-- cockpit -->
+    <ellipse cx="400" cy="320" rx="22" ry="36" fill="#ff5fa8" stroke="#ffffff" stroke-width="2"/>
+    <ellipse cx="400" cy="310" rx="10" ry="16" fill="#ffe5ff" opacity="0.85"/>
+    <!-- wing tip cannons -->
+    <rect x="245" y="410" width="10" height="32" fill="#7afbe8"/>
+    <rect x="545" y="410" width="10" height="32" fill="#7afbe8"/>
+  </g>
+
+  <!-- Title -->
+  <g font-family="'Helvetica Neue', Arial, sans-serif" font-weight="900" text-anchor="middle">
+    <text x="400" y="120" font-size="64" fill="#7afbe8" letter-spacing="14" filter="url(#glow)">SPACE</text>
+    <text x="400" y="180" font-size="40" fill="#ff5fa8" letter-spacing="22" filter="url(#glow)">SHOOTER</text>
+  </g>
+
+  <!-- Subtitle ribbon -->
+  <g font-family="'Helvetica Neue', Arial, sans-serif" font-weight="700" text-anchor="middle">
+    <text x="400" y="700" font-size="20" fill="#b8fff5" letter-spacing="6" opacity="0.9">DEFEND  ·  THE  ·  GALAXY</text>
+  </g>
+</svg>
