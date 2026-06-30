@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=4]
+[gd_scene load_steps=14 format=4]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="2_player"]
@@ -12,6 +12,7 @@
 [ext_resource type="AudioStream" path="res://art/kenney_space-shooter-remastered/Bonus/sfx_shieldDown.ogg" id="9_hit"]
 [ext_resource type="AudioStream" path="res://art/kenney_space-shooter-remastered/Bonus/sfx_shieldUp.ogg" id="10_pu"]
 [ext_resource type="AudioStream" path="res://art/kenney_space-shooter-remastered/Bonus/sfx_lose.ogg" id="11_lose"]
+[ext_resource type="Script" path="res://scripts/post_fx.gd" id="12_fx"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_main")
@@ -47,6 +48,10 @@ position = Vector2(360, 1100)
 [node name="MainMenu" parent="." instance=ExtResource("6_menu")]
 
 [node name="GameOverScreen" parent="." instance=ExtResource("7_go")]
+
+[node name="PostFX" type="CanvasLayer" parent="."]
+script = ExtResource("12_fx")
+layer = 100
 
 [node name="SFX" type="Node" parent="."]
 

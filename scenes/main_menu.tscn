@@ -478,6 +478,29 @@ theme_override_font_sizes/font_size = 20
 text = "70%"
 custom_minimum_size = Vector2(72, 0)
 
+[node name="FxRow" type="HBoxContainer" parent="Center/Panel/Outer/Footer"]
+custom_minimum_size = Vector2(0, 36)
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="FxLabel" type="Label" parent="Center/Panel/Outer/Footer/FxRow"]
+clip_text = true
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0.95, 0.3, 0.65, 1)
+theme_override_colors/font_shadow_color = Color(0.2, 0.02, 0.12, 0.7)
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 18
+text = "VISUAL FX"
+custom_minimum_size = Vector2(0, 0)
+
+[node name="FxButton" type="Button" parent="Center/Panel/Outer/Footer/FxRow"]
+custom_minimum_size = Vector2(160, 32)
+clip_text = true
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.4, 1.0, 0.92, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+text = "ARCADE"
+
 [node name="HintLabel" type="Label" parent="Center/Panel/Outer/Footer"]
 custom_minimum_size = Vector2(0, 28)
 clip_text = true

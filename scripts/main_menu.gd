@@ -23,7 +23,10 @@ signal start_requested
 @onready var _vol_row: HBoxContainer = $Center/Panel/Outer/Footer/VolumeRow
 @onready var _vol_slider: HSlider = $Center/Panel/Outer/Footer/VolumeRow/VolumeSlider
 @onready var _vol_pct: Label = $Center/Panel/Outer/Footer/VolumeRow/VolumePercent
+@onready var _fx_label: Label = $Center/Panel/Outer/Footer/FxRow/FxLabel
+@onready var _fx_button: Button = $Center/Panel/Outer/Footer/FxRow/FxButton
 @onready var _hint: Label = $Center/Panel/Outer/Footer/HintLabel
+const _PostFX := preload("res://scripts/post_fx.gd")
 @onready var _body: BoxContainer = $Center/Panel/Outer/Body
 @onready var _left_col: VBoxContainer = $Center/Panel/Outer/Body/LeftCol
 @onready var _right_col: VBoxContainer = $Center/Panel/Outer/Body/RightCol
@@ -59,6 +62,8 @@ func _ready() -> void:
 	_vol_slider.value = Game.volume * 100.0
 	_vol_pct.text = "%d%%" % int(Game.volume * 100.0)
 	_vol_slider.value_changed.connect(_on_volume_changed)
+	_fx_button.text = _PostFX.preset_name(Game.fx_preset)
+	_fx_button.pressed.connect(_cycle_fx_preset)
 	_ship_idx = Cfg.SHIP_ORDER.find(Game.selected_ship)
 	if _ship_idx < 0: _ship_idx = 1
 	_update_ship_display()
@@ -96,6 +101,8 @@ func _apply_font_scale() -> void:
 	_play.add_theme_font_size_override("font_size", maxi(22, int(32 * s)))
 	_hint.add_theme_font_size_override("font_size", maxi(11, int(14 * s)))
 	_vol_pct.add_theme_font_size_override("font_size", maxi(16, int(20 * s)))
+	_fx_label.add_theme_font_size_override("font_size", maxi(14, int(18 * s)))
+	_fx_button.add_theme_font_size_override("font_size", maxi(14, int(18 * s)))
 	_choose_label.add_theme_font_size_override("font_size", maxi(13, int(18 * s)))
 	_ship_name.add_theme_font_size_override("font_size", maxi(20, int(28 * s)))
 	_ship_desc.add_theme_font_size_override("font_size", maxi(12, int(16 * s)))
@@ -106,6 +113,12 @@ func _apply_font_scale() -> void:
 func _on_volume_changed(value: float) -> void:
 	_vol_pct.text = "%d%%" % int(value)
 	Game.set_volume(value / 100.0)
+
+
+func _cycle_fx_preset() -> void:
+	var next := (Game.fx_preset + 1) % 4
+	Game.set_fx_preset(next)
+	_fx_button.text = _PostFX.preset_name(next)
 
 
 func _on_play_hover() -> void:

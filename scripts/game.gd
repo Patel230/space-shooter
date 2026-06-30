@@ -16,6 +16,7 @@ var high_score: int = 0
 var mute: bool = false
 var volume: float = 0.7
 var selected_ship: int = Cfg.ShipType.FIGHTER
+var fx_preset: int = 2  # PostFX.Preset.ARCADE
 
 
 func _ready() -> void:
@@ -137,6 +138,12 @@ func set_volume(vol: float) -> void:
 	_save()
 
 
+func set_fx_preset(idx: int) -> void:
+	fx_preset = clampi(idx, 0, 3)
+	SignalBus.fx_preset_changed.emit(fx_preset)
+	_save()
+
+
 func _load_save() -> void:
 	if not FileAccess.file_exists(SAVE_PATH):
 		return
@@ -156,10 +163,12 @@ func _load_save() -> void:
 			AudioServer.set_bus_mute(idx, mute)
 	if parsed.has("volume") and (parsed["volume"] is float or parsed["volume"] is int):
 		volume = clampf(float(parsed["volume"]), 0.0, 1.0)
+	if parsed.has("fx_preset") and (parsed["fx_preset"] is float or parsed["fx_preset"] is int):
+		fx_preset = clampi(int(parsed["fx_preset"]), 0, 3)
 
 
 func _save() -> void:
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if f:
-		f.store_string(JSON.stringify({"high_score": high_score, "mute": mute, "volume": volume}))
+		f.store_string(JSON.stringify({"high_score": high_score, "mute": mute, "volume": volume, "fx_preset": fx_preset}))
 		f.close()
