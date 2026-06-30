@@ -81,7 +81,10 @@ func _show_menu() -> void:
 func _on_state_changed(state: int) -> void:
 	if state == Game.State.GAME_OVER:
 		_wave_mgr.stop()
+		_clear_world()
 		_player.visible = false
+		_player.set_process(false)
+		_player.set_process_input(false)
 		_play(_sfx_gameover)
 		_gameover.appear()
 
