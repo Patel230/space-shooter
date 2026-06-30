@@ -31,6 +31,7 @@ func _ready() -> void:
 	_hit_stop_timer = Timer.new()
 	_hit_stop_timer.one_shot = true
 	_hit_stop_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+	_hit_stop_timer.timeout.connect(_on_hit_stop_timeout)
 	add_child(_hit_stop_timer)
 	_connect_signals()
 	_show_menu()
@@ -192,7 +193,10 @@ func _shake(amount: float, duration: float) -> void:
 func _do_hit_stop(duration: float = HIT_STOP_DURATION) -> void:
 	get_tree().paused = true
 	_hit_stop_timer.start(duration)
-	_hit_stop_timer.timeout.connect(func(): get_tree().paused = false, CONNECT_ONE_SHOT)
+
+
+func _on_hit_stop_timeout() -> void:
+	get_tree().paused = false
 
 
 func _play(stream: AudioStreamPlayer) -> void:

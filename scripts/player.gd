@@ -58,8 +58,8 @@ func reset() -> void:
 func _input(event: InputEvent) -> void:
 	if Game.get_state() != Game.State.PLAYING:
 		return
-	if Responsive.is_touch_device():
-		_handle_touch(event)
+	_handle_touch(event)
+	_handle_mouse_drag(event)
 
 
 func _handle_touch(event: InputEvent) -> void:
@@ -73,13 +73,30 @@ func _handle_touch(event: InputEvent) -> void:
 		position = Responsive.clamp_to_screen(event.position, half)
 
 
+func _handle_mouse_drag(event: InputEvent) -> void:
+	# Desktop browsers have no touch but DO emit mouse events.
+	# Track the mouse when held-down and move the ship to the cursor.
+	if not (event is InputEventMouseButton or event is InputEventMouseMotion):
+		return
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			_touch_id = 1 if event.pressed else -1
+			if event.pressed:
+				var half := _sprite.get_rect().size * _sprite.scale * 0.5
+				position = Responsive.clamp_to_screen(event.position, half)
+	elif _touch_id == 1 and event is InputEventMouseMotion:
+		var half := _sprite.get_rect().size * _sprite.scale * 0.5
+		position = Responsive.clamp_to_screen(event.position, half)
+
+
 func _process(delta: float) -> void:
 	if Game.get_state() != Game.State.PLAYING:
 		return
-	if not Responsive.is_touch_device():
-		_move_keyboard(delta)
-	var want_shoot := _touch_id != -1 if Responsive.is_touch_device() \
-			else Input.is_action_pressed("shoot")
+	# Keyboard works on every platform (desktop browsers, desktops, web on
+	# devices with bluetooth keyboards).
+	_move_keyboard(delta)
+	var want_shoot := _touch_id != -1 \
+			or Input.is_action_pressed("shoot")
 	if want_shoot and _can_shoot:
 		_shoot()
 
