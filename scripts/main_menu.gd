@@ -40,6 +40,7 @@ const SHIP_COOLDOWN_SLOW := 0.32
 
 func _ready() -> void:
 	_apply_font_scale()
+	get_viewport().size_changed.connect(_apply_font_scale)
 	_play.pressed.connect(func(): start_requested.emit())
 	_play.mouse_entered.connect(_on_play_hover)
 	_play.mouse_exited.connect(_on_play_unhover)

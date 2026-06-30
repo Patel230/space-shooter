@@ -21,14 +21,14 @@ static func is_touch_device() -> bool:
 
 ## Scale factor based on viewport vs base design resolution.
 ## Returns ~1.0 at 720x1280, scales down on smaller screens, up on larger.
+## Uses geometric mean so landscape windows (wide + short) don't get
+## punished by the height ratio alone.
 static func ui_scale() -> float:
 	var vp := get_viewport_rect().size
-	# Use the smaller dimension ratio so text fits on narrow screens
 	var sx := vp.x / BASE_WIDTH
 	var sy := vp.y / BASE_HEIGHT
-	var s := minf(sx, sy)
-	# Clamp to reasonable bounds
-	return clampf(s, 0.55, 1.8)
+	var s := sqrt(maxf(sx, 0.1) * maxf(sy, 0.1))
+	return clampf(s, 0.6, 2.2)
 
 
 ## Scaled font size: base_size adjusted for viewport.
