@@ -1,20 +1,19 @@
-[gd_scene load_steps=3 format=4 uid="uid://x7kyr3m9e2jv5"]
+[gd_scene load_steps=3 format=4]
 
-[ext_resource type="Script" path="res://scripts/enemy_bullet.gd" id="1"]
-[ext_resource type="Texture2D" path="res://art/kenney_space-shooter-remastered/PNG/Lasers/laserRed11.png" id="2"]
+[ext_resource type="Script" path="res://scripts/enemy_bullet.gd" id="1_s"]
+[ext_resource type="Texture2D" path="res://art/kenney_space-shooter-remastered/PNG/Lasers/laserRed01.png" id="2_t"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
-size = Vector2(8, 40)
+[sub_resource type="RectangleShape2D" id="RS"]
+size = Vector2(8, 22)
 
 [node name="EnemyBullet" type="Area2D"]
 collision_layer = 8
 collision_mask = 1
-script = ExtResource("1")
+script = ExtResource("1_s")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2")
+texture = ExtResource("2_t")
 scale = Vector2(1.5, 1.5)
-rotation = 3.14159
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_1")
+shape = SubResource("RS")

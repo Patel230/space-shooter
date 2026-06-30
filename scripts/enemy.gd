@@ -1,74 +1,87 @@
-extends Area2D
+class_name Enemy extends Area2D
+## Enemy ship with HP, sine drift, and aimed shooting at the player.
+## Emits died/escaped/fired so external systems own lifecycle + bullet spawning.
 
-signal killed(score_value: int, pos: Vector2)
+signal died(pos: Vector2)
+signal escaped
+signal fired(pos: Vector2, dir: Vector2)
 
-const MIN_SPEED := 100.0
-const MAX_SPEED := 200.0
-const SHOOT_INTERVAL_MIN := 2.0
-const SHOOT_INTERVAL_MAX := 5.0
-const ENEMY_BULLET_SCENE := preload("res://scenes/enemy_bullet.tscn")
-
-var speed := 150.0
-var hp := 1
-var score_value := 100
-
-@onready var shoot_timer := $ShootTimer
-@onready var sprite := $Sprite2D
-
-var enemy_textures := [
-	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyBlack1.png"),
-	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyBlack2.png"),
-	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyBlack3.png"),
-	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyBlack4.png"),
-	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyBlack5.png"),
+const ENEMY_TEXTURES: Array = [
 	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyBlue1.png"),
-	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyBlue2.png"),
 	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyBlue3.png"),
-	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyBlue4.png"),
-	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyBlue5.png"),
 	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyGreen1.png"),
-	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyGreen2.png"),
 	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyGreen3.png"),
-	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyGreen4.png"),
-	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyGreen5.png"),
 	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyRed1.png"),
-	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyRed2.png"),
 	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyRed3.png"),
-	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyRed4.png"),
-	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyRed5.png"),
+	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyBlack1.png"),
+	preload("res://art/kenney_space-shooter-remastered/PNG/Enemies/enemyBlack3.png"),
 ]
+
+@export var max_hp: int = 1
+@export var speed: float = Cfg.ENEMY_SPEED_BASE
+@export var shoot_interval: float = Cfg.ENEMY_SHOOT_INTERVAL
+
+@onready var _sprite: Sprite2D = $Sprite2D
+@onready var _muzzle: Marker2D = $Muzzle
+@onready var _shoot_timer: Timer = $ShootTimer
+
+var hp: int = 1
+var _player_ref: Node2D = null
+var _flash_tween: Tween
+
+
+func setup(p_speed: float, p_hp: int, p_interval: float, player: Node2D) -> void:
+	speed = p_speed
+	max_hp = p_hp
+	hp = p_hp
+	shoot_interval = p_interval
+	_player_ref = player
 
 
 func _ready() -> void:
 	add_to_group("enemies")
-	sprite.texture = enemy_textures.pick_random()
-	speed = randf_range(MIN_SPEED, MAX_SPEED)
-	score_value = randi_range(50, 150)
-	hp = 1 if score_value < 100 else 2
-
-	if randf() < 0.5:
-		shoot_timer.timeout.connect(_on_shoot_timer_timeout)
-		shoot_timer.start(randf_range(SHOOT_INTERVAL_MIN, SHOOT_INTERVAL_MAX))
+	hp = max_hp
+	_sprite.texture = ENEMY_TEXTURES.pick_random()
+	_shoot_timer.wait_time = randf_range(shoot_interval * 0.5, shoot_interval * 1.5)
+	_shoot_timer.timeout.connect(_on_shoot)
+	_shoot_timer.start()
+	# Entrance animation: scale-in + fade-in
+	_sprite.scale = Vector2(0.1, 0.1)
+	_sprite.modulate.a = 0.0
+	var t := create_tween()
+	t.set_parallel(true)
+	t.tween_property(_sprite, "scale", Vector2(1.5, 1.5), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_property(_sprite, "modulate:a", 1.0, 0.2)
 
 
 func _process(delta: float) -> void:
 	position.y += speed * delta
-	if position.y > get_viewport_rect().size.y + 100:
+	position.x += sin(position.y * 0.012) * Cfg.ENEMY_DRIFT_AMPLITUDE * delta
+	# Tilt sprite based on horizontal drift direction
+	_sprite.rotation = sin(position.y * 0.012) * 0.3
+	if position.y > Responsive.get_viewport_rect().size.y + 80.0:
+		escaped.emit()
 		queue_free()
 
 
 func take_damage(amount: int) -> void:
-	if hp <= 0:
-		return
 	hp -= amount
+	_flash()
 	if hp <= 0:
-		shoot_timer.stop()
-		killed.emit(score_value, global_position)
+		died.emit(global_position)
 		queue_free()
 
 
-func _on_shoot_timer_timeout() -> void:
-	var bullet := ENEMY_BULLET_SCENE.instantiate()
-	bullet.global_position = global_position + Vector2(0, 20)
-	get_tree().current_scene.add_child(bullet)
-	shoot_timer.start(randf_range(SHOOT_INTERVAL_MIN, SHOOT_INTERVAL_MAX))
+func _flash() -> void:
+	if _flash_tween:
+		_flash_tween.kill()
+	_sprite.modulate = Color(3.0, 3.0, 3.0, 1.0)
+	_flash_tween = create_tween()
+	_flash_tween.tween_property(_sprite, "modulate", Color.WHITE, 0.12)
+
+
+func _on_shoot() -> void:
+	if not is_instance_valid(_player_ref):
+		return
+	var dir := (_player_ref.global_position - global_position).normalized()
+	fired.emit(_muzzle.global_position, dir)
