@@ -1,46 +1,46 @@
-[gd_scene load_steps=10 format=4]
+[gd_scene load_steps=11 format=4]
 
 [ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_s"]
 [ext_resource type="Theme" path="res://scenes/theme.tres" id="2_theme"]
 
 [sub_resource type="StyleBoxFlat" id="sb_arrow_normal"]
-content_margin_left = 6.0
+content_margin_left = 4.0
 content_margin_top = 4.0
-content_margin_right = 6.0
+content_margin_right = 4.0
 content_margin_bottom = 4.0
-bg_color = Color(0.09, 0.07, 0.04, 0.9)
+bg_color = Color(0.06, 0.1, 0.09, 0.85)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.3, 0.85, 0.75, 0.35)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+border_color = Color(0.25, 0.85, 0.75, 0.4)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="sb_arrow_hover"]
-content_margin_left = 6.0
+content_margin_left = 4.0
 content_margin_top = 4.0
-content_margin_right = 6.0
+content_margin_right = 4.0
 content_margin_bottom = 4.0
-bg_color = Color(0.1, 0.22, 0.2, 1)
+bg_color = Color(0.1, 0.24, 0.21, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.3, 0.95, 0.85, 0.95)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-shadow_color = Color(0.1, 0.3, 0.25, 0.5)
-shadow_size = 8
+border_color = Color(0.4, 1.0, 0.9, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0.2, 0.5, 0.45, 0.6)
+shadow_size = 10
 
 [sub_resource type="StyleBoxFlat" id="sb_arrow_pressed"]
-content_margin_left = 6.0
+content_margin_left = 4.0
 content_margin_top = 4.0
-content_margin_right = 6.0
+content_margin_right = 4.0
 content_margin_bottom = 4.0
 bg_color = Color(0.04, 0.1, 0.09, 1)
 border_width_left = 2
@@ -48,76 +48,95 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.5, 1.0, 0.9, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="sb_play_normal"]
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
-bg_color = Color(0.06, 0.18, 0.16, 0.95)
+content_margin_left = 32.0
+content_margin_top = 16.0
+content_margin_right = 32.0
+content_margin_bottom = 16.0
+bg_color = Color(0.06, 0.2, 0.18, 0.95)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.25, 0.95, 0.85, 0.55)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-shadow_color = Color(0.1, 0.4, 0.35, 0.35)
-shadow_size = 10
-shadow_offset = Vector2(0, 3)
-
-[sub_resource type="StyleBoxFlat" id="sb_play_hover"]
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
-bg_color = Color(0.1, 0.28, 0.25, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.5, 1.0, 0.9, 0.95)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-shadow_color = Color(0.1, 0.4, 0.35, 0.5)
-shadow_size = 16
-shadow_offset = Vector2(0, 4)
-
-[sub_resource type="StyleBoxFlat" id="sb_play_pressed"]
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
-bg_color = Color(0.04, 0.1, 0.09, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.5, 1.0, 0.9, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="StyleBoxFlat" id="sb_ship_frame"]
-bg_color = Color(0.04, 0.08, 0.07, 0.5)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.25, 0.95, 0.85, 0.25)
+border_color = Color(0.3, 1.0, 0.88, 0.7)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
+shadow_color = Color(0.15, 0.6, 0.5, 0.4)
+shadow_size = 14
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="sb_play_hover"]
+content_margin_left = 32.0
+content_margin_top = 16.0
+content_margin_right = 32.0
+content_margin_bottom = 16.0
+bg_color = Color(0.12, 0.32, 0.28, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.55, 1.0, 0.92, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0.2, 0.7, 0.6, 0.7)
+shadow_size = 22
+shadow_offset = Vector2(0, 5)
+
+[sub_resource type="StyleBoxFlat" id="sb_play_pressed"]
+content_margin_left = 32.0
+content_margin_top = 16.0
+content_margin_right = 32.0
+content_margin_bottom = 16.0
+bg_color = Color(0.04, 0.12, 0.1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5, 1.0, 0.9, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="sb_ship_frame"]
+bg_color = Color(0.04, 0.07, 0.07, 0.55)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25, 0.85, 0.75, 0.3)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="sb_stat_track"]
+bg_color = Color(0.05, 0.08, 0.08, 0.7)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.5, 0.45, 0.35)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="sb_stat_fill"]
+bg_color = Color(0.3, 0.95, 0.85, 0.9)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="MainMenu" type="CanvasLayer"]
 script = ExtResource("1_s")
@@ -131,67 +150,78 @@ grow_vertical = 2
 
 [node name="Panel" type="Panel" parent="Center"]
 theme = ExtResource("2_theme")
-custom_minimum_size = Vector2(620, 760)
+custom_minimum_size = Vector2(900, 620)
 
-[node name="VBox" type="VBoxContainer" parent="Center/Panel"]
+[node name="Outer" type="VBoxContainer" parent="Center/Panel"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 14.0
-offset_top = 14.0
-offset_right = -14.0
-offset_bottom = -14.0
+offset_left = 32.0
+offset_top = 24.0
+offset_right = -32.0
+offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 2
-alignment = 1
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
-[node name="TitleLabel" type="Label" parent="Center/Panel/VBox"]
-custom_minimum_size = Vector2(0, 56)
+[node name="TitleLabel" type="Label" parent="Center/Panel/Outer"]
+custom_minimum_size = Vector2(0, 64)
 clip_text = true
 horizontal_alignment = 1
 vertical_alignment = 1
-theme_override_colors/font_color = Color(0.25, 0.95, 0.85, 1)
-theme_override_colors/font_shadow_color = Color(0.02, 0.2, 0.18, 0.7)
-theme_override_constants/shadow_offset_y = 2
-theme_override_constants/shadow_outline_size = 6
-theme_override_font_sizes/font_size = 44
+theme_override_colors/font_color = Color(0.3, 1.0, 0.88, 1)
+theme_override_colors/font_shadow_color = Color(0.02, 0.25, 0.22, 0.85)
+theme_override_constants/shadow_offset_y = 3
+theme_override_constants/shadow_outline_size = 8
+theme_override_font_sizes/font_size = 56
 text = "SPACE SHOOTER"
 
-[node name="SubLabel" type="Label" parent="Center/Panel/VBox"]
-custom_minimum_size = Vector2(0, 22)
+[node name="SubLabel" type="Label" parent="Center/Panel/Outer"]
+custom_minimum_size = Vector2(0, 20)
 clip_text = true
 horizontal_alignment = 1
 vertical_alignment = 1
-theme_override_colors/font_color = Color(0.6, 1.0, 0.95, 0.75)
-theme_override_colors/font_shadow_color = Color(0.2, 0.02, 0.12, 0.5)
+theme_override_colors/font_color = Color(0.95, 0.3, 0.65, 0.85)
 theme_override_constants/shadow_offset_y = 1
-theme_override_font_sizes/font_size = 14
-text = "Powered by Godot 4.7"
+theme_override_font_sizes/font_size = 13
+text = "DEFEND THE GALAXY  ·  CHASE THE HIGH SCORE"
 
-[node name="Spacer0" type="Control" parent="Center/Panel/VBox"]
-custom_minimum_size = Vector2(0, 18)
+[node name="Spacer0" type="Control" parent="Center/Panel/Outer"]
+custom_minimum_size = Vector2(0, 14)
 
-[node name="ChooseShipLabel" type="Label" parent="Center/Panel/VBox"]
+[node name="Body" type="HBoxContainer" parent="Center/Panel/Outer"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 28
+alignment = 1
+
+[node name="LeftCol" type="VBoxContainer" parent="Center/Panel/Outer/Body"]
+custom_minimum_size = Vector2(360, 0)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="ChooseShipLabel" type="Label" parent="Center/Panel/Outer/Body/LeftCol"]
 custom_minimum_size = Vector2(0, 18)
 clip_text = true
 horizontal_alignment = 1
 vertical_alignment = 1
 theme_override_colors/font_color = Color(0.6, 1.0, 0.95, 0.55)
-theme_override_font_sizes/font_size = 13
-text = "CHOOSE YOUR SHIP"
+theme_override_font_sizes/font_size = 12
+text = "SELECT YOUR SHIP"
 
-[node name="ShipRow" type="HBoxContainer" parent="Center/Panel/VBox"]
-custom_minimum_size = Vector2(0, 130)
+[node name="ShipRow" type="HBoxContainer" parent="Center/Panel/Outer/Body/LeftCol"]
+custom_minimum_size = Vector2(0, 200)
 alignment = 1
-theme_override_constants/separation = 18
+theme_override_constants/separation = 16
 
-[node name="LeftBtn" type="Button" parent="Center/Panel/VBox/ShipRow"]
-custom_minimum_size = Vector2(56, 80)
+[node name="LeftBtn" type="Button" parent="Center/Panel/Outer/Body/LeftCol/ShipRow"]
+custom_minimum_size = Vector2(56, 110)
 size_flags_vertical = 4
 clip_text = true
-theme_override_font_sizes/font_size = 32
-theme_override_colors/font_color = Color(0.6, 1.0, 0.95, 0.85)
+theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(0.7, 1.0, 0.97, 0.9)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_constants/icon_max_width = 0
 theme_override_styles/normal = SubResource("sb_arrow_normal")
@@ -200,29 +230,42 @@ theme_override_styles/pressed = SubResource("sb_arrow_pressed")
 theme_override_styles/focus = SubResource("sb_arrow_hover")
 text = "<"
 
-[node name="ShipFrame" type="Panel" parent="Center/Panel/VBox/ShipRow"]
-custom_minimum_size = Vector2(140, 130)
+[node name="ShipFrame" type="Panel" parent="Center/Panel/Outer/Body/LeftCol/ShipRow"]
+custom_minimum_size = Vector2(190, 190)
+size_flags_vertical = 4
 theme_override_styles/panel = SubResource("sb_ship_frame")
 
-[node name="ShipPreview" type="TextureRect" parent="Center/Panel/VBox/ShipRow/ShipFrame"]
+[node name="ShipGlow" type="ColorRect" parent="Center/Panel/Outer/Body/LeftCol/ShipRow/ShipFrame"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -80.0
+offset_right = 80.0
+offset_bottom = 80.0
+color = Color(0.3, 1.0, 0.88, 0.18)
+
+[node name="ShipPreview" type="TextureRect" parent="Center/Panel/Outer/Body/LeftCol/ShipRow/ShipFrame"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = -8.0
+offset_left = 18.0
+offset_top = 18.0
+offset_right = -18.0
+offset_bottom = -18.0
 grow_horizontal = 2
 grow_vertical = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="RightBtn" type="Button" parent="Center/Panel/VBox/ShipRow"]
-custom_minimum_size = Vector2(56, 80)
+[node name="RightBtn" type="Button" parent="Center/Panel/Outer/Body/LeftCol/ShipRow"]
+custom_minimum_size = Vector2(56, 110)
 size_flags_vertical = 4
 clip_text = true
-theme_override_font_sizes/font_size = 32
-theme_override_colors/font_color = Color(0.6, 1.0, 0.95, 0.85)
+theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(0.7, 1.0, 0.97, 0.9)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_constants/icon_max_width = 0
 theme_override_styles/normal = SubResource("sb_arrow_normal")
@@ -231,19 +274,19 @@ theme_override_styles/pressed = SubResource("sb_arrow_pressed")
 theme_override_styles/focus = SubResource("sb_arrow_hover")
 text = ">"
 
-[node name="ShipNameLabel" type="Label" parent="Center/Panel/VBox"]
-custom_minimum_size = Vector2(0, 28)
+[node name="ShipNameLabel" type="Label" parent="Center/Panel/Outer/Body/LeftCol"]
+custom_minimum_size = Vector2(0, 32)
 clip_text = true
 horizontal_alignment = 1
 vertical_alignment = 1
-theme_override_colors/font_color = Color(0.3, 0.8, 1, 1)
-theme_override_colors/font_shadow_color = Color(0.05, 0.04, 0.03, 0.85)
-theme_override_constants/shadow_offset_y = 1
+theme_override_colors/font_color = Color(0.3, 0.85, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.02, 0.06, 0.1, 0.95)
+theme_override_constants/shadow_offset_y = 2
 theme_override_constants/shadow_outline_size = 4
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 text = "FIGHTER"
 
-[node name="ShipDescLabel" type="Label" parent="Center/Panel/VBox"]
+[node name="ShipDescLabel" type="Label" parent="Center/Panel/Outer/Body/LeftCol"]
 custom_minimum_size = Vector2(0, 18)
 clip_text = true
 horizontal_alignment = 1
@@ -252,39 +295,132 @@ theme_override_colors/font_color = Color(0.95, 0.92, 0.88, 0.75)
 theme_override_font_sizes/font_size = 13
 text = "Balanced all-rounder"
 
-[node name="ShipStatsLabel" type="Label" parent="Center/Panel/VBox"]
-custom_minimum_size = Vector2(0, 16)
+[node name="RightCol" type="VBoxContainer" parent="Center/Panel/Outer/Body"]
+custom_minimum_size = Vector2(360, 0)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+alignment = 4
+
+[node name="StatsBox" type="VBoxContainer" parent="Center/Panel/Outer/Body/RightCol"]
+theme_override_constants/separation = 10
+
+[node name="StatsTitle" type="Label" parent="Center/Panel/Outer/Body/RightCol/StatsBox"]
+custom_minimum_size = Vector2(0, 18)
 clip_text = true
-horizontal_alignment = 1
+horizontal_alignment = 0
 vertical_alignment = 1
-theme_override_colors/font_color = Color(0.95, 0.92, 0.88, 0.6)
+theme_override_colors/font_color = Color(0.6, 1.0, 0.95, 0.55)
 theme_override_font_sizes/font_size = 12
-text = "Speed: Medium  |  Fire Rate: Normal  |  Lives: 3"
+text = "SHIP STATS"
 
-[node name="Spacer1" type="Control" parent="Center/Panel/VBox"]
-custom_minimum_size = Vector2(0, 12)
+[node name="SpeedRow" type="HBoxContainer" parent="Center/Panel/Outer/Body/RightCol/StatsBox"]
+theme_override_constants/separation = 12
 
-[node name="HighScoreLabel" type="Label" parent="Center/Panel/VBox"]
+[node name="SpeedLabel" type="Label" parent="Center/Panel/Outer/Body/RightCol/StatsBox/SpeedRow"]
+custom_minimum_size = Vector2(80, 0)
+clip_text = true
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0.85, 0.85, 0.82, 0.9)
+theme_override_font_sizes/font_size = 13
+text = "SPEED"
+
+[node name="SpeedBar" type="ProgressBar" parent="Center/Panel/Outer/Body/RightCol/StatsBox/SpeedRow"]
+custom_minimum_size = Vector2(0, 14)
+size_flags_horizontal = 3
+size_flags_vertical = 4
+show_percentage = false
+theme_override_styles/background = SubResource("sb_stat_track")
+theme_override_styles/fill = SubResource("sb_stat_fill")
+max_value = 100.0
+value = 60.0
+
+[node name="FireRow" type="HBoxContainer" parent="Center/Panel/Outer/Body/RightCol/StatsBox"]
+theme_override_constants/separation = 12
+
+[node name="FireLabel" type="Label" parent="Center/Panel/Outer/Body/RightCol/StatsBox/FireRow"]
+custom_minimum_size = Vector2(80, 0)
+clip_text = true
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0.85, 0.85, 0.82, 0.9)
+theme_override_font_sizes/font_size = 13
+text = "FIRE RATE"
+
+[node name="FireBar" type="ProgressBar" parent="Center/Panel/Outer/Body/RightCol/StatsBox/FireRow"]
+custom_minimum_size = Vector2(0, 14)
+size_flags_horizontal = 3
+size_flags_vertical = 4
+show_percentage = false
+theme_override_styles/background = SubResource("sb_stat_track")
+theme_override_styles/fill = SubResource("sb_stat_fill")
+max_value = 100.0
+value = 60.0
+
+[node name="LivesRow" type="HBoxContainer" parent="Center/Panel/Outer/Body/RightCol/StatsBox"]
+theme_override_constants/separation = 12
+
+[node name="LivesLabel" type="Label" parent="Center/Panel/Outer/Body/RightCol/StatsBox/LivesRow"]
+custom_minimum_size = Vector2(80, 0)
+clip_text = true
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0.85, 0.85, 0.82, 0.9)
+theme_override_font_sizes/font_size = 13
+text = "LIVES"
+
+[node name="LivesBar" type="ProgressBar" parent="Center/Panel/Outer/Body/RightCol/StatsBox/LivesRow"]
+custom_minimum_size = Vector2(0, 14)
+size_flags_horizontal = 3
+size_flags_vertical = 4
+show_percentage = false
+theme_override_styles/background = SubResource("sb_stat_track")
+theme_override_styles/fill = SubResource("sb_stat_fill")
+max_value = 100.0
+value = 60.0
+
+[node name="ShotsRow" type="HBoxContainer" parent="Center/Panel/Outer/Body/RightCol/StatsBox"]
+theme_override_constants/separation = 12
+
+[node name="ShotsLabel" type="Label" parent="Center/Panel/Outer/Body/RightCol/StatsBox/ShotsRow"]
+custom_minimum_size = Vector2(80, 0)
+clip_text = true
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0.85, 0.85, 0.82, 0.9)
+theme_override_font_sizes/font_size = 13
+text = "SHOTS"
+
+[node name="ShotsValue" type="Label" parent="Center/Panel/Outer/Body/RightCol/StatsBox/ShotsRow"]
+size_flags_horizontal = 3
+clip_text = true
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0.3, 1.0, 0.88, 0.95)
+theme_override_font_sizes/font_size = 13
+text = "SINGLE"
+
+[node name="Spacer1" type="Control" parent="Center/Panel/Outer/Body/RightCol"]
+custom_minimum_size = Vector2(0, 10)
+
+[node name="HighScoreLabel" type="Label" parent="Center/Panel/Outer/Body/RightCol"]
 custom_minimum_size = Vector2(0, 22)
 clip_text = true
-horizontal_alignment = 1
+horizontal_alignment = 0
 vertical_alignment = 1
-theme_override_colors/font_color = Color(0.25, 0.95, 0.85, 1)
-theme_override_colors/font_shadow_color = Color(0.02, 0.2, 0.18, 0.55)
+theme_override_colors/font_color = Color(1, 0.78, 0.25, 1)
+theme_override_colors/font_shadow_color = Color(0.25, 0.15, 0.02, 0.55)
 theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 18
-text = "High Score: 0"
+text = "HIGH SCORE  0"
 
-[node name="Spacer2" type="Control" parent="Center/Panel/VBox"]
-custom_minimum_size = Vector2(0, 18)
+[node name="Spacer2" type="Control" parent="Center/Panel/Outer/Body/RightCol"]
+custom_minimum_size = Vector2(0, 8)
 
-[node name="PlayButton" type="Button" parent="Center/Panel/VBox"]
-custom_minimum_size = Vector2(400, 64)
+[node name="PlayButton" type="Button" parent="Center/Panel/Outer/Body/RightCol"]
+custom_minimum_size = Vector2(0, 72)
+size_flags_horizontal = 3
 clip_text = true
-theme_override_font_sizes/font_size = 28
-theme_override_colors/font_color = Color(0.9, 1.0, 0.97, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.95, 1.0, 0.98, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
-theme_override_colors/font_shadow_color = Color(0.02, 0.2, 0.18, 0.6)
+theme_override_colors/font_shadow_color = Color(0.02, 0.2, 0.18, 0.7)
 theme_override_constants/shadow_offset_y = 1
 theme_override_styles/normal = SubResource("sb_play_normal")
 theme_override_styles/hover = SubResource("sb_play_hover")
@@ -292,46 +428,44 @@ theme_override_styles/pressed = SubResource("sb_play_pressed")
 theme_override_styles/focus = SubResource("sb_play_hover")
 text = "PLAY"
 
-[node name="Spacer3" type="Control" parent="Center/Panel/VBox"]
-custom_minimum_size = Vector2(0, 8)
+[node name="Footer" type="VBoxContainer" parent="Center/Panel/Outer"]
+theme_override_constants/separation = 6
 
-[node name="VolumeRow" type="HBoxContainer" parent="Center/Panel/VBox"]
-custom_minimum_size = Vector2(0, 28)
+[node name="VolumeRow" type="HBoxContainer" parent="Center/Panel/Outer/Footer"]
+custom_minimum_size = Vector2(0, 26)
 theme_override_constants/separation = 12
 
-[node name="VolumeLabel" type="Label" parent="Center/Panel/VBox/VolumeRow"]
+[node name="VolumeLabel" type="Label" parent="Center/Panel/Outer/Footer/VolumeRow"]
 clip_text = true
-horizontal_alignment = 0
+vertical_alignment = 1
 theme_override_colors/font_color = Color(0.25, 0.95, 0.85, 0.85)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 13
 text = "VOL"
 custom_minimum_size = Vector2(40, 0)
 
-[node name="VolumeSlider" type="HSlider" parent="Center/Panel/VBox/VolumeRow"]
-custom_minimum_size = Vector2(0, 22)
+[node name="VolumeSlider" type="HSlider" parent="Center/Panel/Outer/Footer/VolumeRow"]
+custom_minimum_size = Vector2(0, 20)
 size_flags_horizontal = 3
 size_flags_vertical = 4
 min_value = 0.0
 max_value = 100.0
 value = 70.0
 
-[node name="VolumePercent" type="Label" parent="Center/Panel/VBox/VolumeRow"]
+[node name="VolumePercent" type="Label" parent="Center/Panel/Outer/Footer/VolumeRow"]
 clip_text = true
 horizontal_alignment = 2
+vertical_alignment = 1
 theme_override_colors/font_color = Color(0.25, 0.95, 0.85, 0.85)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 13
 text = "70%"
 custom_minimum_size = Vector2(40, 0)
 
-[node name="Spacer4" type="Control" parent="Center/Panel/VBox"]
-custom_minimum_size = Vector2(0, 6)
-
-[node name="HintLabel" type="Label" parent="Center/Panel/VBox"]
-custom_minimum_size = Vector2(0, 24)
+[node name="HintLabel" type="Label" parent="Center/Panel/Outer/Footer"]
+custom_minimum_size = Vector2(0, 22)
 clip_text = true
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
-theme_override_colors/font_color = Color(0.5, 0.48, 0.45, 1)
+theme_override_colors/font_color = Color(0.55, 0.55, 0.52, 0.95)
 theme_override_font_sizes/font_size = 11
-text = "Arrows/WASD/Drag: Move    Space: Shoot    M: Mute"
+text = "ARROWS / WASD / DRAG  ·  MOVE      SPACE  ·  SHOOT      M  ·  MUTE"
