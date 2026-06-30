@@ -19,7 +19,6 @@ signal menu_requested
 var _record_tween: Tween
 var _hover_tween: Tween
 var _entrance_tween: Tween
-var _orig_positions: Dictionary = {}
 
 
 func _ready() -> void:
@@ -29,10 +28,6 @@ func _ready() -> void:
 	_restart.mouse_exited.connect(func(): _btn_unhover(_restart))
 	_menu.mouse_entered.connect(func(): _hover_sfx(); _btn_hover(_menu))
 	_menu.mouse_exited.connect(func(): _btn_unhover(_menu))
-	# Cache original positions once so entrance animation has a stable target
-	# even if appear() is called twice in a row.
-	for c in [_title, _score, _high, _record, _restart, _menu]:
-		_orig_positions[c] = c.position.y
 	get_viewport().size_changed.connect(_apply_font_scale)
 
 
@@ -63,43 +58,46 @@ func appear() -> void:
 	var is_record: bool = Game.last_run_is_record
 	_high.text = "High Score: %d" % Game.high_score
 	_record.visible = is_record
+	# Let the layout settle so VBoxContainer positions are final before we
+	# snapshot them for the entrance animation.
+	await get_tree().process_frame
 	# Cancel any in-flight tweens so a rapid game-over → restart → game-over
 	# cycle doesn't leave nodes mid-animation.
 	if _record_tween: _record_tween.kill()
 	if _entrance_tween: _entrance_tween.kill()
-	# Always reset to known good positions before re-animating.
-	for c in _orig_positions:
-		c.position.y = _orig_positions[c]
+	# Snapshot current layout positions (must happen AFTER layout has settled).
+	var orig_positions: Dictionary = {}
+	var children_to_animate: Array = [_title, _score, _high]
+	if is_record:
+		children_to_animate.append(_record)
+	children_to_animate.append(_restart)
+	children_to_animate.append(_menu)
+	for c in children_to_animate:
+		orig_positions[c] = c.position.y
 	show()
 	# Staggered entrance
 	_panel.pivot_offset = _panel.size * 0.5
 	_panel.modulate.a = 0.0
 	_panel.scale = Vector2(0.9, 0.9)
-	var children: Array = [_title, _score, _high]
-	if is_record:
-		children.append(_record)
-	children.append(_restart)
-	children.append(_menu)
-	for c in children:
+	for c in children_to_animate:
 		c.modulate.a = 0.0
-		c.position.y = _orig_positions[c] + 10
+		c.position.y = orig_positions[c] + 10
 
 	_entrance_tween = create_tween()
 	_entrance_tween.tween_property(_panel, "modulate:a", 1.0, 0.3).set_ease(Tween.EASE_OUT)
 	_entrance_tween.parallel().tween_property(_panel, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	for i in children.size():
-		var c: Control = children[i]
+	for i in children_to_animate.size():
+		var c: Control = children_to_animate[i]
 		_entrance_tween.tween_interval(0.07)
 		_entrance_tween.parallel().tween_property(c, "modulate:a", 1.0, 0.25)
-		_entrance_tween.parallel().tween_property(c, "position:y", _orig_positions[c], 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		_entrance_tween.parallel().tween_property(c, "position:y", orig_positions[c], 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	# Record pulse + focus after entrance
 	_entrance_tween.chain().tween_callback(func():
-		# Safety: ensure everything visible even if tween was interrupted.
 		_panel.modulate.a = 1.0
 		_panel.scale = Vector2.ONE
-		for c in children:
+		for c in children_to_animate:
 			c.modulate.a = 1.0
-			c.position.y = _orig_positions[c]
+			c.position.y = orig_positions[c]
 		if is_record:
 			_start_record_pulse()
 		_restart.grab_focus()
