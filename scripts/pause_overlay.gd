@@ -111,6 +111,11 @@ func disappear() -> void:
 	if not visible:
 		return
 	var t := create_tween()
+	# Called right after get_tree().paused is set back to false, but this
+	# node's process_mode is WHEN_PAUSED (needed so buttons work while the
+	# game IS paused) — without this, the tween would never process and the
+	# panel would stay stuck on screen.
+	t.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	t.tween_property(_panel, "modulate:a", 0.0, 0.15)
 	t.parallel().tween_property(_panel, "scale", Vector2(0.92, 0.92), 0.15)
 	t.finished.connect(hide)
