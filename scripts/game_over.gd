@@ -71,23 +71,26 @@ func appear() -> void:
 	if _entrance_tween: _entrance_tween.kill()
 	# Snapshot current layout positions (must happen AFTER layout has settled).
 	var orig_positions: Dictionary = {}
-	var children_to_animate: Array[Control] = [_title, _score, _high, _restart, _menu]
-	for c in children_to_animate:
+	var children_for_staggered_entrance: Array[Control] = [_title, _score, _high, _restart, _menu]
+	var all_children: Array[Control] = children_for_staggered_entrance.duplicate()
+	if is_record:
+		all_children.insert(3, _record)
+	for c in all_children:
 		orig_positions[c] = c.position.y
 	show()
 	# Staggered entrance — panel first
 	_panel.pivot_offset = _panel.size * 0.5
 	_panel.modulate.a = 0.0
 	_panel.scale = Vector2(0.9, 0.9)
-	for c in children_to_animate:
+	for c in children_for_staggered_entrance:
 		c.modulate.a = 0.0
 		c.position.y = orig_positions[c] + 10
 
 	_entrance_tween = create_tween()
 	_entrance_tween.tween_property(_panel, "modulate:a", 1.0, 0.3).set_ease(Tween.EASE_OUT)
 	_entrance_tween.parallel().tween_property(_panel, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	for i in children_to_animate.size():
-		var c: Control = children_to_animate[i]
+	for i in children_for_staggered_entrance.size():
+		var c: Control = children_for_staggered_entrance[i]
 		_entrance_tween.tween_interval(0.07)
 		_entrance_tween.parallel().tween_property(c, "modulate:a", 1.0, 0.25)
 		_entrance_tween.parallel().tween_property(c, "position:y", orig_positions[c], 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
@@ -98,9 +101,11 @@ func appear() -> void:
 	_entrance_tween.chain().tween_callback(func():
 		_panel.modulate.a = 1.0
 		_panel.scale = Vector2.ONE
-		for c in children_to_animate:
+		for c in children_for_staggered_entrance:
 			c.modulate.a = 1.0
 			c.position.y = orig_positions[c]
+		if is_record:
+			_record.position.y = orig_positions[_record]
 		_restart.grab_focus()
 	)
 
