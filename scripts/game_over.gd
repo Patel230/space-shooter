@@ -62,8 +62,15 @@ func appear() -> void:
 		# Start hidden so the pulse entrance can animate it in cleanly.
 		_record.modulate = Color(0.5, 1.0, 0.4, 0)
 		_record.scale = Vector2(0.6, 0.6)
-	# Let the layout settle so VBoxContainer positions are final before we
-	# snapshot them for the entrance animation.
+	# VBoxContainer only finalizes child positions for controls that are
+	# visible-in-tree, and this CanvasLayer starts hidden — so show() must
+	# happen before we let layout settle, or the snapshot below captures
+	# stale (pre-layout) positions. Keep everything invisible via alpha
+	# instead so nothing flashes before the entrance animation starts.
+	show()
+	_panel.modulate.a = 0.0
+	for c in [_title, _score, _high, _restart, _menu]:
+		c.modulate.a = 0.0
 	await get_tree().process_frame
 	# Cancel any in-flight tweens so a rapid game-over → restart → game-over
 	# cycle doesn't leave nodes mid-animation.
@@ -77,10 +84,8 @@ func appear() -> void:
 		all_children.insert(3, _record)
 	for c in all_children:
 		orig_positions[c] = c.position.y
-	show()
 	# Staggered entrance — panel first
 	_panel.pivot_offset = _panel.size * 0.5
-	_panel.modulate.a = 0.0
 	_panel.scale = Vector2(0.9, 0.9)
 	for c in children_for_staggered_entrance:
 		c.modulate.a = 0.0
