@@ -18,7 +18,7 @@ const HIT_STOP_DURATION := 0.04
 @onready var _menu: MainMenu = $MainMenu
 @onready var _gameover: GameOverScreen = $GameOverScreen
 
-var _pause_overlay: CanvasLayer
+var _pause_overlay: PauseOverlay
 
 @onready var _sfx_explosion: AudioStreamPlayer = $SFX/Explosion
 @onready var _sfx_hit: AudioStreamPlayer = $SFX/Hit
@@ -38,7 +38,7 @@ func _ready() -> void:
 	# Tag the Explosions container so transient particles can find it
 	_explosions.add_to_group("fx_container")
 	# Pause overlay
-	_pause_overlay = preload("res://scripts/pause_overlay.gd").new()
+	_pause_overlay = preload("res://scenes/pause_overlay.tscn").instantiate()
 	add_child(_pause_overlay)
 	_pause_overlay.resume_requested.connect(_resume_game)
 	_pause_overlay.restart_requested.connect(_on_pause_restart)
