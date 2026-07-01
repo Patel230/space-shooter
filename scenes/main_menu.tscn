@@ -252,7 +252,7 @@ theme_override_styles/normal = SubResource("sb_arrow_normal")
 theme_override_styles/hover = SubResource("sb_arrow_hover")
 theme_override_styles/pressed = SubResource("sb_arrow_pressed")
 theme_override_styles/focus = SubResource("sb_arrow_hover")
-text = "◀"
+text = "«"
 
 [node name="ShipFrame" type="Panel" parent="Center/Panel/Outer/Body/LeftCol/ShipRow"]
 custom_minimum_size = Vector2(190, 190)
@@ -296,7 +296,7 @@ theme_override_styles/normal = SubResource("sb_arrow_normal")
 theme_override_styles/hover = SubResource("sb_arrow_hover")
 theme_override_styles/pressed = SubResource("sb_arrow_pressed")
 theme_override_styles/focus = SubResource("sb_arrow_hover")
-text = "▶"
+text = "»"
 
 [node name="ShipNameLabel" type="Label" parent="Center/Panel/Outer/Body/LeftCol"]
 custom_minimum_size = Vector2(0, 32)
