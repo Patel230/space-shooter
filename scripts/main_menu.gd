@@ -177,9 +177,9 @@ func _update_ship_display(animate: bool = false) -> void:
 
 	var ship_color: Color = def.color
 	_ship_glow.color = Color(ship_color.r, ship_color.g, ship_color.b, 0.22)
-	_speed_bar.modulate = ship_color
-	_fire_bar.modulate = ship_color
-	_lives_bar.modulate = ship_color
+	# Stat bars intentionally keep their own semantic colors (speed/fire
+	# rate/lives) regardless of ship — tinting them with ship_color washed
+	# all three into one indistinguishable hue.
 	_shots_value.modulate = ship_color
 
 	var speed_pct := remap(def.speed, SHIP_SPEED_MIN, SHIP_SPEED_MAX, 25.0, 100.0)
