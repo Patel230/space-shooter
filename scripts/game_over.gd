@@ -44,12 +44,17 @@ func _btn_unhover(b: Button) -> void:
 
 func _apply_font_scale() -> void:
 	var s := Responsive.ui_scale()
-	_title.add_theme_font_size_override("font_size", maxi(26, int(38 * s)))
-	_score.add_theme_font_size_override("font_size", maxi(18, int(26 * s)))
-	_high.add_theme_font_size_override("font_size", maxi(15, int(22 * s)))
-	_record.add_theme_font_size_override("font_size", maxi(14, int(20 * s)))
+	_title.add_theme_font_size_override("font_size", maxi(24, int(34 * s)))
+	_score.add_theme_font_size_override("font_size", maxi(19, int(28 * s)))
+	_high.add_theme_font_size_override("font_size", maxi(14, int(20 * s)))
+	_record.add_theme_font_size_override("font_size", maxi(13, int(18 * s)))
 	_restart.add_theme_font_size_override("font_size", maxi(16, int(22 * s)))
 	_menu.add_theme_font_size_override("font_size", maxi(16, int(22 * s)))
+	var half := Vector2(320, 380) * 0.5 * clampf(s, 0.8, 1.6)
+	_panel.offset_left = -half.x
+	_panel.offset_top = -half.y
+	_panel.offset_right = half.x
+	_panel.offset_bottom = half.y
 
 
 func appear() -> void:
