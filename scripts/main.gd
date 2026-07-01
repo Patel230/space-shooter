@@ -30,6 +30,12 @@ var _hit_stop_timer: Timer
 
 
 func _ready() -> void:
+	# Main has no per-frame processing of its own — it's purely event/signal
+	# driven — so it's safe to keep it always active. Without this, _input()
+	# stops being delivered at all once the tree is paused (default
+	# PROCESS_MODE_PAUSABLE), so pressing Escape a second time to resume
+	# silently does nothing and the player is stuck until they click Resume.
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_hit_stop_timer = Timer.new()
 	_hit_stop_timer.one_shot = true
 	_hit_stop_timer.process_mode = Node.PROCESS_MODE_ALWAYS
@@ -69,6 +75,12 @@ func _connect_signals() -> void:
 # --- State transitions ---
 
 func _start_game() -> void:
+	# Defensively clear the pause overlay and unpause: a rapid pause/resume
+	# spam can transition state (e.g. death right after resuming, before the
+	# fade-out finishes) without ever going through _resume_game(), which
+	# would otherwise leave the tree paused and the overlay stuck on screen.
+	get_tree().paused = false
+	_pause_overlay.disappear()
 	_clear_world()
 	Game.start_run()
 	_player.reset()
@@ -81,6 +93,8 @@ func _start_game() -> void:
 
 
 func _show_menu() -> void:
+	get_tree().paused = false
+	_pause_overlay.disappear()
 	_wave_mgr.stop()
 	_clear_world()
 	_player.visible = false
@@ -93,6 +107,8 @@ func _show_menu() -> void:
 
 func _on_state_changed(state: int) -> void:
 	if state == Game.State.GAME_OVER:
+		get_tree().paused = false
+		_pause_overlay.disappear()
 		_wave_mgr.stop()
 		_clear_world()
 		_player.visible = false
