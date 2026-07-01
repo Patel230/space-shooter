@@ -64,8 +64,9 @@ custom_minimum_size = Vector2(0, 8)
 custom_minimum_size = Vector2(0, 52)
 clip_text = true
 theme_override_font_sizes/font_size = 22
-theme_override_colors/font_color = Color(0.98, 0.95, 0.9, 1)
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.5, 1.0, 0.4, 1)
+theme_override_colors/font_hover_color = Color(0.65, 1.0, 0.55, 1)
+theme_override_colors/font_focus_color = Color(0.65, 1.0, 0.55, 1)
 text = "▶ RESUME"
 
 [node name="Spacer1" type="Control" parent="Center/Panel/VBox"]
@@ -75,8 +76,9 @@ custom_minimum_size = Vector2(0, 6)
 custom_minimum_size = Vector2(0, 52)
 clip_text = true
 theme_override_font_sizes/font_size = 22
-theme_override_colors/font_color = Color(0.98, 0.95, 0.9, 1)
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(1.0, 0.75, 0.2, 1)
+theme_override_colors/font_hover_color = Color(1.0, 0.85, 0.4, 1)
+theme_override_colors/font_focus_color = Color(1.0, 0.85, 0.4, 1)
 text = "⟲ RESTART"
 
 [node name="Spacer2" type="Control" parent="Center/Panel/VBox"]
@@ -86,8 +88,9 @@ custom_minimum_size = Vector2(0, 6)
 custom_minimum_size = Vector2(0, 52)
 clip_text = true
 theme_override_font_sizes/font_size = 22
-theme_override_colors/font_color = Color(0.98, 0.95, 0.9, 1)
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.4, 0.7, 1.0, 1)
+theme_override_colors/font_hover_color = Color(0.6, 0.82, 1.0, 1)
+theme_override_colors/font_focus_color = Color(0.6, 0.82, 1.0, 1)
 text = "☰ MAIN MENU"
 
 [node name="Spacer3" type="Control" parent="Center/Panel/VBox"]
