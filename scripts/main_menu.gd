@@ -109,6 +109,9 @@ func _apply_font_scale() -> void:
 	_vol_pct.add_theme_font_size_override("font_size", maxi(16, int(20 * s)))
 	_fx_label.add_theme_font_size_override("font_size", maxi(14, int(18 * s)))
 	_fx_button.add_theme_font_size_override("font_size", maxi(14, int(18 * s)))
+	# Widest preset name is "CINEMATIC" — keep the button wide enough that
+	# text never clips as the font scales with viewport size.
+	_fx_button.custom_minimum_size.x = maxf(190.0, 118.0 * s)
 	_choose_label.add_theme_font_size_override("font_size", maxi(13, int(18 * s)))
 	_ship_name.add_theme_font_size_override("font_size", maxi(20, int(28 * s)))
 	_ship_desc.add_theme_font_size_override("font_size", maxi(12, int(16 * s)))

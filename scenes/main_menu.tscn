@@ -252,7 +252,7 @@ theme_override_styles/normal = SubResource("sb_arrow_normal")
 theme_override_styles/hover = SubResource("sb_arrow_hover")
 theme_override_styles/pressed = SubResource("sb_arrow_pressed")
 theme_override_styles/focus = SubResource("sb_arrow_hover")
-text = "<"
+text = "◀"
 
 [node name="ShipFrame" type="Panel" parent="Center/Panel/Outer/Body/LeftCol/ShipRow"]
 custom_minimum_size = Vector2(190, 190)
@@ -296,7 +296,7 @@ theme_override_styles/normal = SubResource("sb_arrow_normal")
 theme_override_styles/hover = SubResource("sb_arrow_hover")
 theme_override_styles/pressed = SubResource("sb_arrow_pressed")
 theme_override_styles/focus = SubResource("sb_arrow_hover")
-text = ">"
+text = "▶"
 
 [node name="ShipNameLabel" type="Label" parent="Center/Panel/Outer/Body/LeftCol"]
 custom_minimum_size = Vector2(0, 32)
@@ -508,8 +508,8 @@ text = "VISUAL FX"
 custom_minimum_size = Vector2(0, 0)
 
 [node name="FxButton" type="Button" parent="Center/Panel/Outer/Footer/FxRow"]
-custom_minimum_size = Vector2(160, 32)
-clip_text = true
+custom_minimum_size = Vector2(190, 32)
+clip_text = false
 theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.4, 1.0, 0.92, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
