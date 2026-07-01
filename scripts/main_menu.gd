@@ -99,13 +99,23 @@ func _apply_orientation() -> void:
 	_right_btn.custom_minimum_size = Vector2(56, arrow_h) * s
 
 
+## ui_scale() is a geometric mean of width/height ratios, so on extremely
+## tall-narrow windows (portrait phones, resized desktop browsers) it can
+## return a scale that makes full-width text wider than the panel — this
+## caps a font size so `text` never overflows the given pixel width.
+func _fit_width(font_size: int, text: String, avail_px: float) -> int:
+	var max_size := int(avail_px / maxf(1.0, text.length() * 0.8))
+	return mini(font_size, maxi(10, max_size))
+
+
 func _apply_font_scale() -> void:
 	var s := Responsive.ui_scale()
-	_title.add_theme_font_size_override("font_size", maxi(34, int(56 * s)))
-	_sub.add_theme_font_size_override("font_size", maxi(13, int(18 * s)))
+	var panel_w: float = _panel.size.x - 40.0
+	_title.add_theme_font_size_override("font_size", _fit_width(maxi(34, int(56 * s)), _title.text, panel_w))
+	_sub.add_theme_font_size_override("font_size", _fit_width(maxi(13, int(18 * s)), _sub.text, panel_w))
 	_high.add_theme_font_size_override("font_size", maxi(16, int(22 * s)))
 	_play.add_theme_font_size_override("font_size", maxi(22, int(32 * s)))
-	_hint.add_theme_font_size_override("font_size", maxi(11, int(14 * s)))
+	_hint.add_theme_font_size_override("font_size", _fit_width(maxi(11, int(14 * s)), _hint.text, panel_w))
 	_vol_pct.add_theme_font_size_override("font_size", maxi(16, int(20 * s)))
 	_fx_label.add_theme_font_size_override("font_size", maxi(14, int(18 * s)))
 	_fx_button.add_theme_font_size_override("font_size", maxi(14, int(18 * s)))
